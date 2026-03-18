@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
 import { Plus, Edit, Eye } from "lucide-react";
 import Image from "next/image";
+import { BotaoExcluirProduto } from "@/components/admin/BotaoExcluirProduto";
 
 async function getProdutos(busca?: string, page = 1) {
   const limit = 20;
@@ -110,6 +111,7 @@ export default async function AdminProdutosPage({
                     >
                       <Edit size={16} />
                     </Link>
+                    <BotaoExcluirProduto id={p.id} nome={p.nome} />
                   </div>
                 </td>
               </tr>
