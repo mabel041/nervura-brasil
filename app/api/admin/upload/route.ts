@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const filename = `produtos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
   const { error } = await supabaseAdmin.storage
-    .from("nervura-imagens")
+    .from("produtos")
     .upload(filename, buffer, {
       contentType: file.type,
       upsert: false,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { data } = supabaseAdmin.storage
-    .from("nervura-imagens")
+    .from("produtos")
     .getPublicUrl(filename);
 
   return NextResponse.json({ url: data.publicUrl });
