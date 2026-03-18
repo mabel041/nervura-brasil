@@ -7,7 +7,10 @@
       "Bash(npx tsc:*)",
       "WebFetch(domain:superfrete.readme.io)",
       "WebSearch",
-      "WebFetch(domain:api.superfrete.com)"
+      "WebFetch(domain:api.superfrete.com)",
+      "Bash(npx tsx:*)",
+      "Bash(node --loader tsx/esm -e \":*)",
+      "Bash(npm run:*)"
     ]
   }
 }

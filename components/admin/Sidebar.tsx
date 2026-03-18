@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   ExternalLink,
+  Layers,
 } from "lucide-react";
 
 const links = [
@@ -18,6 +19,7 @@ const links = [
   { href: "/admin/produtos", label: "Produtos", icon: Package },
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
   { href: "/admin/promocoes", label: "Promoções", icon: Tag },
+  { href: "/admin/colecoes", label: "Coleções", icon: Layers },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];
 

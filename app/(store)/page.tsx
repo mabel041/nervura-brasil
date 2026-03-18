@@ -18,8 +18,12 @@ async function getConfiguracoes() {
   return prisma.configuracao.findUnique({ where: { id: "config" } });
 }
 
+async function getColecoes() {
+  return prisma.colecao.findMany({ where: { ativo: true }, orderBy: { ordem: "asc" } });
+}
+
 export default async function HomePage() {
-  const [produtos, config] = await Promise.all([getProdutosDestaque(), getConfiguracoes()]);
+  const [produtos, config, colecoes] = await Promise.all([getProdutosDestaque(), getConfiguracoes(), getColecoes()]);
 
   return (
     <>
@@ -102,51 +106,38 @@ export default async function HomePage() {
       </section>
 
       {/* Coleções */}
-      <section className="bg-nervura-creme-escuro py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="font-serif text-4xl text-nervura-texto-principal">Nossas Coleções</h2>
+      {colecoes.length > 0 && (
+        <section className="bg-nervura-creme-escuro py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="font-serif text-4xl text-nervura-texto-principal">Nossas Coleções</h2>
+            </div>
+            <div className={`grid grid-cols-1 gap-6 ${colecoes.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+              {colecoes.map((col) => (
+                <Link key={col.id} href={col.href} className="group relative aspect-[4/5] overflow-hidden rounded-xl">
+                  {col.imagem ? (
+                    <Image
+                      src={col.imagem}
+                      alt={col.nome}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-nervura-verde-medio" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-6 text-white">
+                    <p className="text-xs uppercase tracking-widest mb-1 text-nervura-ouro">
+                      {col.subtitulo}
+                    </p>
+                    <h3 className="font-serif text-2xl">{col.nome}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                href: "/copa-2026",
-                img: "https://images.unsplash.com/photo-1511719434606-32ef99ee8a46?w=600",
-                label: "Copa 2026",
-                sub: "Identidade brasileira",
-              },
-              {
-                href: "/catalogo?colecao=canelado",
-                img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600",
-                label: "Canelado",
-                sub: "Conforto & estilo",
-              },
-              {
-                href: "/catalogo?colecao=basics",
-                img: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600",
-                label: "Basics",
-                sub: "O essencial refinado",
-              },
-            ].map((col) => (
-              <Link key={col.href} href={col.href} className="group relative aspect-[4/5] overflow-hidden rounded-xl">
-                <Image
-                  src={col.img}
-                  alt={col.label}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6 text-white">
-                  <p className="text-xs uppercase tracking-widest mb-1 text-nervura-ouro">
-                    {col.sub}
-                  </p>
-                  <h3 className="font-serif text-2xl">{col.label}</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Nossa História */}
       <section id="nossa-historia" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">

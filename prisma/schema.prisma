@@ -103,6 +103,17 @@ model Cupom {
   criadoEm   DateTime  @default(now())
 }
 
+model Colecao {
+  id        String  @id @default(cuid())
+  nome      String
+  slug      String  @unique
+  subtitulo String
+  imagem    String?
+  href      String
+  ordem     Int     @default(0)
+  ativo     Boolean @default(true)
+}
+
 model Configuracao {
   id             String  @id @default("config")
   tikTokPixelId  String?

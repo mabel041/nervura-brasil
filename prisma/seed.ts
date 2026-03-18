@@ -281,10 +281,21 @@ async function main() {
     },
   });
 
+  // Coleções da home
+  await prisma.colecao.deleteMany({});
+  await prisma.colecao.createMany({
+    data: [
+      { nome: "Copa 2026", slug: "copa-2026", subtitulo: "Identidade brasileira", imagem: "https://images.unsplash.com/photo-1511719434606-32ef99ee8a46?w=600", href: "/copa-2026", ordem: 0, ativo: true },
+      { nome: "Canelado", slug: "canelado", subtitulo: "Conforto e estilo", imagem: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600", href: "/catalogo?colecao=canelado", ordem: 1, ativo: true },
+      { nome: "Basics", slug: "basics", subtitulo: "O essencial refinado", imagem: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600", href: "/catalogo?colecao=basics", ordem: 2, ativo: true },
+    ],
+  });
+
   console.log("✅ Seed concluído com sucesso!");
   console.log("   • 16 produtos criados (Copa 2026, Canelado, Basics)");
   console.log("   • 3 cupons criados (COPA10, NERVURA20, PRIMEIRACOMPRA)");
   console.log("   • Configuração inicial criada");
+  console.log("   • 3 coleções criadas na home");
 }
 
 main()
