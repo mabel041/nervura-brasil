@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { formatCurrency } from "@/lib/utils";
-import { Plus, Edit, Eye } from "lucide-react";
-import Image from "next/image";
-import { BotaoExcluirProduto } from "@/components/admin/BotaoExcluirProduto";
+import { Plus } from "lucide-react";
+import { TabelaProdutosDraggable } from "@/components/admin/TabelaProdutosDraggable";
 
 async function getProdutos(busca?: string, page = 1) {
   const limit = 20;
@@ -13,7 +11,7 @@ async function getProdutos(busca?: string, page = 1) {
       where,
       skip: (page - 1) * limit,
       take: limit,
-      orderBy: { criadoEm: "desc" },
+      orderBy: [{ ordem: "asc" }, { criadoEm: "desc" }],
       include: { variacoes: true },
     }),
     prisma.produto.count({ where }),
@@ -51,74 +49,7 @@ export default async function AdminProdutosPage({
 
       <p className="text-sm text-gray-500">{total} produtos</p>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-            <tr>
-              <th className="px-4 py-3 text-left">Produto</th>
-              <th className="px-4 py-3 text-left">Coleção</th>
-              <th className="px-4 py-3 text-right">Preço</th>
-              <th className="px-4 py-3 text-center">Status</th>
-              <th className="px-4 py-3 text-center">Ações</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {produtos.map((p) => (
-              <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {p.imagens[0] && (
-                      <div className="relative w-10 h-12 rounded overflow-hidden flex-shrink-0">
-                        <Image src={p.imagens[0]} alt={p.nome} fill className="object-cover" />
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-medium text-sm">{p.nome}</p>
-                      <p className="text-xs text-gray-400">{p.slug}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-600">{Array.isArray(p.colecoes) ? p.colecoes.join(", ") : ""}</td>
-                <td className="px-4 py-3 text-right text-sm font-medium">
-                  {p.precoPromo ? (
-                    <div>
-                      <span className="text-nervura-verde">{formatCurrency(p.precoPromo)}</span>
-                      <span className="text-gray-400 line-through text-xs ml-1">{formatCurrency(p.preco)}</span>
-                    </div>
-                  ) : (
-                    formatCurrency(p.preco)
-                  )}
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <span className={`badge-status text-xs ${p.ativo ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                    {p.ativo ? "Ativo" : "Inativo"}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-center gap-2">
-                    <Link
-                      href={`/produto/${p.slug}`}
-                      target="_blank"
-                      className="p-1.5 text-gray-400 hover:text-nervura-verde transition-colors"
-                      title="Ver na loja"
-                    >
-                      <Eye size={16} />
-                    </Link>
-                    <Link
-                      href={`/admin/produtos/${p.id}`}
-                      className="p-1.5 text-gray-400 hover:text-nervura-verde transition-colors"
-                      title="Editar"
-                    >
-                      <Edit size={16} />
-                    </Link>
-                    <BotaoExcluirProduto id={p.id} nome={p.nome} />
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <TabelaProdutosDraggable produtosIniciais={produtos} />
     </div>
   );
 }

@@ -25,10 +25,11 @@ model Produto {
   destaque    Boolean      @default(false)
   colecoes    String[] // "copa-2026" | "canelado" | "basics"
   material    String?
-  variacoes   Variacao[]
-  criadoEm    DateTime     @default(now())
-  atualizadoEm DateTime   @updatedAt
-  itens       ItemPedido[]
+  variacoes    Variacao[]
+  ordem        Int          @default(0)
+  criadoEm     DateTime     @default(now())
+  atualizadoEm DateTime     @updatedAt
+  itens        ItemPedido[]
 }
 
 model Variacao {
