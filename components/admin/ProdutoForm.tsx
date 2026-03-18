@@ -8,6 +8,12 @@ import Image from "next/image";
 import { Plus, Trash2, Upload, Loader2 } from "lucide-react";
 import { produtoSchema, type ProdutoFormData } from "@/lib/validacoes";
 import { slugify } from "@/lib/utils";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface Variacao {
   cor: string;
@@ -64,21 +70,27 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     if (!files || imagens.length >= 6) return;
     setUploadLoading(true);
     setUploadErro("");
+
     for (const file of Array.from(files).slice(0, 6 - imagens.length)) {
-      const fd = new FormData();
-      fd.append("file", file);
-      try {
-        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-        const data = await res.json();
-        if (res.ok) {
-          setImagens((prev) => [...prev, data.url]);
-        } else {
-          setUploadErro(`Erro ao enviar "${file.name}": ${data.error ?? `HTTP ${res.status}`}`);
-          console.error("Upload error:", data);
-        }
-      } catch (err) {
-        setUploadErro(`Erro de rede ao enviar "${file.name}". Verifique sua conexão.`);
-        console.error("Upload exception:", err);
+      // Validação de tamanho: máx 10MB
+      if (file.size > 10 * 1024 * 1024) {
+        setUploadErro(`"${file.name}" é muito grande (${(file.size / 1024 / 1024).toFixed(1)}MB). Máximo: 10MB.`);
+        continue;
+      }
+
+      const ext = file.name.split(".").pop();
+      const filename = `produtos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+      const { error } = await supabase.storage
+        .from("produtos")
+        .upload(filename, file, { contentType: file.type, upsert: false });
+
+      if (error) {
+        setUploadErro(`Erro ao enviar "${file.name}": ${error.message}`);
+        console.error("Supabase upload error:", error);
+      } else {
+        const { data } = supabase.storage.from("produtos").getPublicUrl(filename);
+        setImagens((prev) => [...prev, data.publicUrl]);
       }
     }
     setUploadLoading(false);
