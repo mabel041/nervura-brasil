@@ -198,9 +198,15 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
           <h2 className="font-serif text-xl">Imagens ({imagens.length}/6)</h2>
           {uploadLoading && <Loader2 size={18} className="animate-spin text-nervura-verde" />}
         </div>
+        <p className="text-xs text-nervura-texto-muted bg-nervura-creme rounded-lg px-3 py-2 border border-nervura-borda">
+          💡 <strong>Dica:</strong> A ordem das imagens corresponde à ordem das cores nas variações abaixo. Ex: 1ª imagem → 1ª cor, 2ª imagem → 2ª cor.
+        </p>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
           {imagens.map((img, i) => (
             <div key={i} className="relative aspect-[3/4] rounded-lg overflow-hidden group">
+              <div className="absolute top-1 left-1 z-10 bg-nervura-verde text-nervura-creme text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">
+                {i + 1}
+              </div>
               <Image src={img} alt={`Imagem ${i + 1}`} fill className="object-cover" />
               <button
                 type="button"

@@ -152,7 +152,14 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
               {cores.map((cor) => (
                 <button
                   key={cor}
-                  onClick={() => { setCorSelecionada(cor); setTamanhoSelecionado(""); }}
+                  onClick={() => {
+                    setCorSelecionada(cor);
+                    setTamanhoSelecionado("");
+                    const corIndex = cores.indexOf(cor);
+                    if (corIndex < produto.imagens.length) {
+                      setImagemSelecionada(corIndex);
+                    }
+                  }}
                   className={`border rounded-md px-4 py-2 text-sm transition-all ${
                     corSelecionada === cor
                       ? "bg-nervura-verde text-nervura-creme border-nervura-verde"
