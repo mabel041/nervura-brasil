@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { CheckCircle, CreditCard, Smartphone, Loader2, Copy } from "lucide-react";
+import { CheckCircle, CreditCard, Smartphone, Loader2, Copy, Truck } from "lucide-react";
 import { useCarrinho } from "@/store/carrinho";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/validacoes";
 import { formatCurrency } from "@/lib/utils";
@@ -19,6 +19,7 @@ declare global {
 }
 
 type Parcela = { installments: number; installment_amount: number; total_amount: number; recommended_message: string };
+type OpcaoFrete = { id: number; nome: string; preco: number; prazo: number; descricao: string };
 
 export function CheckoutForm() {
   const router = useRouter();
@@ -29,6 +30,10 @@ export function CheckoutForm() {
   const [pixData, setPixData] = useState<{ qrCodeBase64: string; copiaCola: string; pedidoId: string } | null>(null);
   const [parcelas, setParcelas] = useState<Parcela[]>([]);
   const [parcelasSelecionadas, setParcelasSelecionadas] = useState(1);
+  const [opcoesFrete, setOpcoesFrete] = useState<OpcaoFrete[]>([]);
+  const [freteSelecionado, setFreteSelecionado] = useState<OpcaoFrete | null>(null);
+  const [freteLoading, setFreteLoading] = useState(false);
+  const [freteErro, setFreteErro] = useState("");
   const cardFormRef = useRef<{ getCardFormData: () => Promise<Record<string, unknown>> } | null>(null);
 
   const {
@@ -82,11 +87,12 @@ export function CheckoutForm() {
     cardFormRef.current = cf;
   };
 
-  // Auto-preencher CEP
+  // Auto-preencher CEP + calcular frete
   const cep = watch("cep");
   useEffect(() => {
     const c = cep?.replace(/\D/g, "");
     if (c?.length === 8) {
+      // Preencher endereço
       fetch(`/api/cep/${c}`)
         .then((r) => r.json())
         .then((d) => {
@@ -98,7 +104,34 @@ export function CheckoutForm() {
           }
         })
         .catch(() => {});
+
+      // Calcular frete
+      setFreteLoading(true);
+      setFreteErro("");
+      setOpcoesFrete([]);
+      setFreteSelecionado(null);
+      fetch("/api/frete/calcular", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cep: c,
+          totalItens: subtotal(),
+          quantidadeItens: itens.reduce((acc, i) => acc + i.quantidade, 0),
+        }),
+      })
+        .then((r) => r.json())
+        .then((d) => {
+          if (d.opcoes?.length) {
+            setOpcoesFrete(d.opcoes);
+            setFreteSelecionado(d.opcoes[0]);
+          } else {
+            setFreteErro("Não foi possível calcular o frete para este CEP.");
+          }
+        })
+        .catch(() => setFreteErro("Erro ao calcular frete."))
+        .finally(() => setFreteLoading(false));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cep, setValue]);
 
   // Polling PIX
@@ -132,6 +165,9 @@ export function CheckoutForm() {
       estado: form.estado,
     };
 
+    const freteValor = freteSelecionado?.preco ?? 0;
+    const totalComFrete = total() + freteValor;
+
     const base = {
       itens: itens.map((i) => ({
         produtoId: i.produtoId,
@@ -143,7 +179,10 @@ export function CheckoutForm() {
       cupom,
       subtotal: subtotal(),
       desconto: desconto(),
-      total: total(),
+      total: totalComFrete,
+      freteValor,
+      freteServico: freteSelecionado?.nome ?? null,
+      fretePrazo: freteSelecionado?.prazo ?? null,
       nome: form.nome,
       email: form.email,
       telefone: form.telefone,
@@ -302,6 +341,53 @@ export function CheckoutForm() {
             </div>
           </section>
 
+          {/* Frete */}
+          <section className="bg-white rounded-xl p-6 border border-nervura-borda">
+            <h2 className="font-serif text-xl mb-4 flex items-center gap-2">
+              <Truck size={20} className="text-nervura-verde" /> Frete
+            </h2>
+            {freteLoading && (
+              <div className="flex items-center gap-2 text-nervura-texto-muted text-sm">
+                <Loader2 size={16} className="animate-spin" /> Calculando frete...
+              </div>
+            )}
+            {freteErro && (
+              <p className="text-red-500 text-sm">{freteErro}</p>
+            )}
+            {!freteLoading && opcoesFrete.length === 0 && !freteErro && (
+              <p className="text-nervura-texto-muted text-sm">Preencha o CEP acima para calcular o frete.</p>
+            )}
+            {opcoesFrete.length > 0 && (
+              <div className="space-y-2">
+                {opcoesFrete.map((op) => (
+                  <label
+                    key={op.id}
+                    className={`flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                      freteSelecionado?.id === op.id
+                        ? "border-nervura-verde bg-nervura-creme"
+                        : "border-nervura-borda hover:border-nervura-verde"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="frete"
+                        checked={freteSelecionado?.id === op.id}
+                        onChange={() => setFreteSelecionado(op)}
+                        className="accent-nervura-verde"
+                      />
+                      <div>
+                        <p className="font-medium text-sm">{op.nome}</p>
+                        <p className="text-xs text-nervura-texto-muted">{op.descricao}</p>
+                      </div>
+                    </div>
+                    <span className="font-bold text-nervura-verde text-sm">{formatCurrency(op.preco)}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </section>
+
           {/* Pagamento */}
           <section className="bg-white rounded-xl p-6 border border-nervura-borda">
             <h2 className="font-serif text-xl mb-4">Forma de Pagamento</h2>
@@ -392,8 +478,8 @@ export function CheckoutForm() {
             {loading ? (
               <><Loader2 size={20} className="animate-spin" /> Processando...</>
             ) : (
-              <>{tab === "pix" ? "Gerar PIX" : "Pagar com Cartão"} — {formatCurrency(total())}</>
-            )}
+              <>{tab === "pix" ? "Gerar PIX" : "Pagar com Cartão"} — {formatCurrency(total() + (freteSelecionado?.preco ?? 0))}</>
+)}
           </button>
         </form>
       </div>
@@ -427,9 +513,15 @@ export function CheckoutForm() {
                 <span>- {formatCurrency(desconto())}</span>
               </div>
             )}
+            <div className="flex justify-between text-nervura-texto-secundario">
+              <span>Frete {freteSelecionado ? `(${freteSelecionado.nome})` : ""}</span>
+              <span>{freteSelecionado ? formatCurrency(freteSelecionado.preco) : "—"}</span>
+            </div>
             <div className="flex justify-between font-bold text-base pt-1 border-t border-nervura-borda">
               <span>Total</span>
-              <span className="text-nervura-verde">{formatCurrency(total())}</span>
+              <span className="text-nervura-verde">
+                {formatCurrency(total() + (freteSelecionado?.preco ?? 0))}
+              </span>
             </div>
           </div>
         </div>
