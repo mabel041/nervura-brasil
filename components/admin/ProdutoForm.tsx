@@ -39,6 +39,7 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     ]
   );
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadErro, setUploadErro] = useState("");
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -62,13 +63,22 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
   const handleUpload = async (files: FileList | null) => {
     if (!files || imagens.length >= 6) return;
     setUploadLoading(true);
+    setUploadErro("");
     for (const file of Array.from(files).slice(0, 6 - imagens.length)) {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      if (res.ok) {
-        const { url } = await res.json();
-        setImagens((prev) => [...prev, url]);
+      try {
+        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        const data = await res.json();
+        if (res.ok) {
+          setImagens((prev) => [...prev, data.url]);
+        } else {
+          setUploadErro(`Erro ao enviar "${file.name}": ${data.error ?? `HTTP ${res.status}`}`);
+          console.error("Upload error:", data);
+        }
+      } catch (err) {
+        setUploadErro(`Erro de rede ao enviar "${file.name}". Verifique sua conexão.`);
+        console.error("Upload exception:", err);
       }
     }
     setUploadLoading(false);
@@ -203,6 +213,12 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             </label>
           )}
         </div>
+        {uploadErro && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 flex items-start gap-2">
+            <span className="font-bold shrink-0">⚠️ Erro no upload:</span>
+            <span>{uploadErro}</span>
+          </div>
+        )}
       </div>
 
       {/* Variações */}
