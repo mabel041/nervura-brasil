@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ interface Produto {
   descricao: string;
   preco: number;
   precoPromo?: number | null;
-  colecao: string;
+  colecoes: string[];
   material?: string | null;
   destaque: boolean;
   ativo: boolean;
@@ -36,6 +36,12 @@ interface Produto {
   video?: string | null;
   variacoes: Array<{ id: string; cor: string; tamanho: string; estoque: number }>;
 }
+
+const COLECOES_OPCOES = [
+  { value: "copa-2026", label: "Copa 2026" },
+  { value: "canelado", label: "Canelado" },
+  { value: "basics", label: "Basics" },
+] as const;
 
 export function ProdutoForm({ produto }: { produto?: Produto }) {
   const router = useRouter();
@@ -61,7 +67,7 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
       descricao: produto?.descricao ?? "",
       preco: produto?.preco ?? 0,
       precoPromo: produto?.precoPromo ?? undefined,
-      colecao: (produto?.colecao as ProdutoFormData["colecao"]) ?? "basics",
+      colecoes: (produto?.colecoes as ProdutoFormData["colecoes"]) ?? ["basics"],
       material: produto?.material ?? "",
       destaque: produto?.destaque ?? false,
       ativo: produto?.ativo ?? true,
@@ -69,6 +75,13 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
   });
 
   const nome = watch("nome");
+
+  // Auto-slug: gera automaticamente ao digitar o nome (apenas em modo criação)
+  useEffect(() => {
+    if (!produto) {
+      setValue("slug", slugify(nome ?? ""));
+    }
+  }, [nome, produto, setValue]);
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || imagens.length >= 6) return;
@@ -168,10 +181,6 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             <input
               {...register("nome")}
               className="input-field"
-              onChange={(e) => {
-                register("nome").onChange(e);
-                if (!produto) setValue("slug", slugify(e.target.value));
-              }}
             />
             {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome.message}</p>}
           </div>
@@ -181,12 +190,21 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
           </div>
           <div>
-            <label className="label">Coleção</label>
-            <select {...register("colecao")} className="input-field">
-              <option value="copa-2026">Copa 2026</option>
-              <option value="canelado">Canelado</option>
-              <option value="basics">Basics</option>
-            </select>
+            <label className="label">Coleções</label>
+            <div className="flex flex-col gap-2 pt-1">
+              {COLECOES_OPCOES.map((col) => (
+                <label key={col.value} className="flex items-center gap-2 cursor-pointer text-sm">
+                  <input
+                    type="checkbox"
+                    value={col.value}
+                    {...register("colecoes")}
+                    className="w-4 h-4 accent-nervura-verde"
+                  />
+                  {col.label}
+                </label>
+              ))}
+            </div>
+            {errors.colecoes && <p className="text-red-500 text-xs mt-1">{errors.colecoes.message}</p>}
           </div>
           <div>
             <label className="label">Preço (R$)</label>

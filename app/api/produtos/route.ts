@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = { ativo: true };
-  if (colecao) where.colecao = colecao;
+  if (colecao) where.colecoes = { has: colecao };
   if (destaque === "true") where.destaque = true;
   if (busca) where.nome = { contains: busca, mode: "insensitive" };
   if (precoMin || precoMax) {

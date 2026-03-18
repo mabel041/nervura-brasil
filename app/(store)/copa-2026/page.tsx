@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 async function getProdutosCopa() {
   return prisma.produto.findMany({
-    where: { colecao: "copa-2026", ativo: true },
+    where: { colecoes: { has: "copa-2026" }, ativo: true },
     orderBy: { destaque: "desc" },
     include: { variacoes: true },
   });

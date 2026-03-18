@@ -30,7 +30,7 @@ export const produtoSchema = z.object({
   descricao: z.string().min(10, "Descrição obrigatória"),
   preco: z.number().positive("Preço deve ser positivo"),
   precoPromo: z.number().positive("Preço promocional deve ser positivo").optional().nullable(),
-  colecao: z.enum(["copa-2026", "canelado", "basics"]),
+  colecoes: z.array(z.enum(["copa-2026", "canelado", "basics"])).min(1, "Selecione ao menos uma coleção"),
   material: z.string().optional(),
   destaque: z.boolean().default(false),
   ativo: z.boolean().default(true),

@@ -22,7 +22,7 @@ model Produto {
   video       String?
   ativo       Boolean      @default(true)
   destaque    Boolean      @default(false)
-  colecao     String // "copa-2026" | "canelado" | "basics"
+  colecoes    String[] // "copa-2026" | "canelado" | "basics"
   material    String?
   variacoes   Variacao[]
   criadoEm    DateTime     @default(now())

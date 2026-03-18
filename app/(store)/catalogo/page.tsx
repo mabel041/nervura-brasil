@@ -23,7 +23,7 @@ async function getProdutos(params: SearchParams) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = { ativo: true };
-  if (params.colecao) where.colecao = params.colecao;
+  if (params.colecao) where.colecoes = { has: params.colecao };
   if (params.busca) where.nome = { contains: params.busca, mode: "insensitive" };
   if (params.precoMin || params.precoMax) {
     where.preco = {};

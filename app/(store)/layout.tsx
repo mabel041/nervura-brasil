@@ -3,6 +3,7 @@ import { Header } from "@/components/loja/Header";
 import { BannerPromocao } from "@/components/loja/BannerPromocao";
 import { BotaoWhatsApp } from "@/components/loja/BotaoWhatsApp";
 import { PixelProvider } from "@/components/PixelProvider";
+import { BarraPagamentos } from "@/components/loja/BarraPagamentos";
 
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
       />
       <Header />
       <main className="min-h-screen">{children}</main>
+      <BarraPagamentos />
       <BotaoWhatsApp />
     </>
   );
