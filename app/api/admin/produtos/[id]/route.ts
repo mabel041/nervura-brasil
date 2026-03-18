@@ -34,10 +34,9 @@ export async function DELETE(
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
-  await prisma.produto.update({
-    where: { id: params.id },
-    data: { ativo: false },
-  });
+  // Excluir variações primeiro (foreign key), depois o produto
+  await prisma.variacao.deleteMany({ where: { produtoId: params.id } });
+  await prisma.produto.delete({ where: { id: params.id } });
 
   return NextResponse.json({ ok: true });
 }
