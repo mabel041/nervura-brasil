@@ -33,6 +33,7 @@ interface Produto {
   destaque: boolean;
   ativo: boolean;
   imagens: string[];
+  video?: string | null;
   variacoes: Array<{ id: string; cor: string; tamanho: string; estoque: number }>;
 }
 
