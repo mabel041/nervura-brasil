@@ -24,8 +24,17 @@ async function getColecoes() {
   return prisma.colecao.findMany({ where: { ativo: true }, orderBy: { ordem: "asc" } });
 }
 
+async function getAparencia() {
+  return prisma.aparencia.findUnique({ where: { id: "aparencia" } });
+}
+
 export default async function HomePage() {
-  const [produtos, config, colecoes] = await Promise.all([getProdutosDestaque(), getConfiguracoes(), getColecoes()]);
+  const [produtos, config, colecoes, aparencia] = await Promise.all([
+    getProdutosDestaque(),
+    getConfiguracoes(),
+    getColecoes(),
+    getAparencia(),
+  ]);
 
   return (
     <>
@@ -33,7 +42,7 @@ export default async function HomePage() {
       <section className="relative min-h-[85vh] bg-nervura-verde flex items-center overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <Image
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920"
+            src={aparencia?.homeHeroImagem ?? "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920"}
             alt="Background"
             fill
             className="object-cover"
@@ -45,15 +54,24 @@ export default async function HomePage() {
             Moda Feminina Brasileira
           </p>
           <h1 className="font-serif text-5xl sm:text-7xl font-light text-nervura-creme mb-6 leading-tight">
-            Nervura<br />
-            <span className="font-bold">Brasil</span>
+            {aparencia?.homeHeroTitulo ? (
+              aparencia.homeHeroTitulo
+            ) : (
+              <>
+                Nervura<br />
+                <span className="font-bold">Brasil</span>
+              </>
+            )}
           </h1>
           <p className="text-nervura-texto-muted text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
-            Peças exclusivas que celebram a força, elegância e identidade da mulher brasileira.
+            {aparencia?.homeHeroSubtitulo ?? "Peças exclusivas que celebram a força, elegância e identidade da mulher brasileira."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/catalogo" className="btn-primary text-base px-8 py-4">
-              Ver Catálogo
+            <Link
+              href={aparencia?.homeHeroBotaoLink ?? "/catalogo"}
+              className="btn-primary text-base px-8 py-4"
+            >
+              {aparencia?.homeHeroBotaoTexto ?? "Ver Catálogo"}
             </Link>
             <Link href="/copa-2026" className="btn-outline border-nervura-ouro text-nervura-ouro hover:bg-nervura-ouro hover:text-nervura-verde text-base px-8 py-4">
               Coleção Copa 2026
@@ -146,7 +164,7 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
             <Image
-              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800"
+              src={aparencia?.sobreImagem ?? "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800"}
               alt="Nossa história"
               fill
               className="object-cover"
@@ -156,20 +174,30 @@ export default async function HomePage() {
             <p className="text-nervura-ouro font-sans text-xs uppercase tracking-widest mb-3">
               Nossa História
             </p>
-            <h2 className="font-serif text-4xl lg:text-5xl text-nervura-texto-principal mb-6 leading-tight">
-              Feito para a mulher brasileira, com alma brasileira
+            <h2 className="font-serif text-4xl lg:text-5xl text-nervura-texto-principal mb-6 leading-tight" style={{ whiteSpace: "pre-line" }}>
+              {aparencia?.sobreTitulo ?? "Feito para a mulher brasileira, com alma brasileira"}
             </h2>
-            <p className="text-nervura-texto-secundario leading-relaxed mb-4">
-              A Nervura Brasil nasceu da vontade de criar roupas que contam histórias. Cada peça é
-              desenvolvida com atenção aos detalhes, materiais selecionados e um olhar apaixonado
-              pela cultura brasileira.
-            </p>
-            <p className="text-nervura-texto-secundario leading-relaxed mb-8">
-              Do canelado clássico às peças que celebram o futebol brasileiro, somos uma marca
-              que acredita que moda é expressão, identidade e amor próprio.
-            </p>
+            {aparencia?.sobreDescricao ? (
+              <div className="text-nervura-texto-secundario leading-relaxed mb-8 space-y-4">
+                {aparencia.sobreDescricao.split("\n\n").map((paragrafo, i) => (
+                  <p key={i}>{paragrafo}</p>
+                ))}
+              </div>
+            ) : (
+              <>
+                <p className="text-nervura-texto-secundario leading-relaxed mb-4">
+                  A Nervura Brasil nasceu da vontade de criar roupas que contam histórias. Cada peça é
+                  desenvolvida com atenção aos detalhes, materiais selecionados e um olhar apaixonado
+                  pela cultura brasileira.
+                </p>
+                <p className="text-nervura-texto-secundario leading-relaxed mb-8">
+                  Do canelado clássico às peças que celebram o futebol brasileiro, somos uma marca
+                  que acredita que moda é expressão, identidade e amor próprio.
+                </p>
+              </>
+            )}
             <Link href="/catalogo" className="btn-primary">
-              Explorar coleções
+              {aparencia?.sobreBotaoTexto ?? "Explorar coleções"}
             </Link>
           </div>
         </div>

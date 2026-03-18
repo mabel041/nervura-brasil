@@ -291,6 +291,38 @@ async function main() {
     ],
   });
 
+  // === APARÊNCIA ===
+  await prisma.aparencia.upsert({
+    where: { id: "aparencia" },
+    update: {},
+    create: {
+      id: "aparencia",
+      logoTexto: "Nervura Brasil",
+      bannerAtivo: true,
+      bannerTexto: "🎉 Coleção Copa 2026 chegou! Use COPA10 para 10% off",
+      bannerLink: "/copa-2026",
+      bannerLinkTexto: "Ver coleção →",
+      homeHeroTitulo: "Moda com alma brasileira",
+      homeHeroSubtitulo: "Peças exclusivas que celebram a força e elegância da mulher brasileira.",
+      homeHeroBotaoTexto: "Explorar Coleção",
+      homeHeroBotaoLink: "/catalogo",
+      sobreTitulo: "Feita para a mulher brasileira,\ncom alma brasileira",
+      sobreDescricao:
+        "A Nervura Brasil nasceu da paixão por celebrar a moda feminina brasileira. Cada peça é desenvolvida com atenção aos detalhes, expressando autenticidade e nossa identidade cultural.\n\nTe convidamos a descobrir as peças que celebrarão a liberdade, a força e a elegância que existe em cada mulher brasileira.",
+      sobreBotaoTexto: "Explorar coleções",
+      copaHeroTitulo: "Copa 2026",
+      copaHeroSubtitulo:
+        "Vista a alma do Brasil. Peças exclusivas criadas para celebrar o maior evento de futebol do mundo.",
+      catalogoTitulo: "Nossa Coleção",
+      rodapeDescricao:
+        "Moda feminina brasileira com identidade. Peças exclusivas que celebram a força e elegância da mulher brasileira.",
+      corVerdePrincipal: "#1A4D2E",
+      corOuro: "#C9A84C",
+      corFundo: "#F5EFD6",
+      corCreme: "#FAF7EE",
+    },
+  });
+
   console.log("✅ Seed concluído com sucesso!");
   console.log("   • 16 produtos criados (Copa 2026, Canelado, Basics)");
   console.log("   • 3 cupons criados (COPA10, NERVURA20, PRIMEIRACOMPRA)");

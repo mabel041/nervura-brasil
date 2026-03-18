@@ -20,8 +20,12 @@ async function getProdutosCopa() {
   });
 }
 
+async function getAparencia() {
+  return prisma.aparencia.findUnique({ where: { id: "aparencia" } });
+}
+
 export default async function Copa2026Page() {
-  const produtos = await getProdutosCopa();
+  const [produtos, aparencia] = await Promise.all([getProdutosCopa(), getAparencia()]);
 
   return (
     <>
@@ -29,7 +33,7 @@ export default async function Copa2026Page() {
       <section className="relative min-h-[60vh] bg-nervura-verde overflow-hidden flex items-center">
         <div className="absolute inset-0 opacity-20">
           <Image
-            src="https://images.unsplash.com/photo-1587329310686-91414b8e3cb7?w=1920"
+            src={aparencia?.copaHeroImagem ?? "https://images.unsplash.com/photo-1587329310686-91414b8e3cb7?w=1920"}
             alt="Copa 2026"
             fill
             className="object-cover"
@@ -44,10 +48,10 @@ export default async function Copa2026Page() {
             Coleção Especial
           </span>
           <h1 className="font-serif text-5xl sm:text-7xl text-nervura-creme mb-4 leading-tight">
-            Copa 2026
+            {aparencia?.copaHeroTitulo ?? "Copa 2026"}
           </h1>
           <p className="text-nervura-texto-muted text-lg max-w-xl mx-auto mb-10">
-            Vista a alma do Brasil. Peças exclusivas criadas para celebrar o maior evento de futebol do mundo.
+            {aparencia?.copaHeroSubtitulo ?? "Vista a alma do Brasil. Peças exclusivas criadas para celebrar o maior evento de futebol do mundo."}
           </p>
 
           {/* Contador */}

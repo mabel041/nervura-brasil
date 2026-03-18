@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -54,12 +55,19 @@ async function getProdutos(params: SearchParams) {
   return { produtos, total, page, totalPages: Math.ceil(total / limit) };
 }
 
+async function getAparencia() {
+  return prisma.aparencia.findUnique({ where: { id: "aparencia" } });
+}
+
 export default async function CatalogoPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
-  const { produtos, total, page, totalPages } = await getProdutos(searchParams);
+  const [{ produtos, total, page, totalPages }, aparencia] = await Promise.all([
+    getProdutos(searchParams),
+    getAparencia(),
+  ]);
 
   const tituloColecao: Record<string, string> = {
     "copa-2026": "Copa 2026",
@@ -67,16 +75,30 @@ export default async function CatalogoPage({
     basics: "Basics",
   };
 
+  const tituloPadrao = aparencia?.catalogoTitulo ?? "Catálogo";
   const titulo = searchParams.colecao
-    ? tituloColecao[searchParams.colecao] ?? "Catálogo"
-    : "Catálogo";
+    ? tituloColecao[searchParams.colecao] ?? tituloPadrao
+    : tituloPadrao;
 
   return (
     <>
       {/* Header da página */}
-      <div className="bg-nervura-verde py-10 px-4 text-center">
-        <h1 className="font-serif text-4xl text-nervura-creme">{titulo}</h1>
-        <p className="text-nervura-texto-muted mt-2 text-sm">{total} peças encontradas</p>
+      <div className="relative bg-nervura-verde py-10 px-4 text-center overflow-hidden">
+        {aparencia?.catalogoBannerImagem && (
+          <div className="absolute inset-0 opacity-20">
+            <Image
+              src={aparencia.catalogoBannerImagem}
+              alt="Banner catálogo"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+        <div className="relative">
+          <h1 className="font-serif text-4xl text-nervura-creme">{titulo}</h1>
+          <p className="text-nervura-texto-muted mt-2 text-sm">{total} peças encontradas</p>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

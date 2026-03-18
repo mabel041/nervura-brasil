@@ -115,6 +115,57 @@ model Colecao {
   ativo     Boolean @default(true)
 }
 
+model Aparencia {
+  id String @id @default("aparencia")
+
+  // Logotipo
+  logoTexto        String?
+  logoUrl          String?
+
+  // Banner anúncio (barra topo)
+  bannerAtivo      Boolean @default(true)
+  bannerTexto      String?
+  bannerLink       String?
+  bannerLinkTexto  String?
+
+  // Home — Hero principal
+  homeHeroImagem     String?
+  homeHeroTitulo     String?
+  homeHeroSubtitulo  String?
+  homeHeroBotaoTexto String?
+  homeHeroBotaoLink  String?
+
+  // Home — Seção "Nossa História"
+  sobreTitulo    String?
+  sobreDescricao String?
+  sobreImagem    String?
+  sobreBotaoTexto String?
+
+  // Copa 2026 — Hero
+  copaHeroImagem    String?
+  copaHeroTitulo    String?
+  copaHeroSubtitulo String?
+
+  // Catálogo — Banner topo
+  catalogoTitulo         String?
+  catalogoBannerImagem   String?
+
+  // Página Produto
+  produtoSecaoTitulo String?
+
+  // Checkout
+  checkoutTitulo String?
+
+  // Rodapé
+  rodapeDescricao String?
+
+  // Cores principais (hex)
+  corVerdePrincipal String?
+  corOuro           String?
+  corFundo          String?
+  corCreme          String?
+}
+
 model Configuracao {
   id             String  @id @default("config")
   tikTokPixelId  String?
