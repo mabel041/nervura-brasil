@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-nervura-borda;
+  }
+
+  body {
+    @apply bg-nervura-creme text-nervura-texto-principal font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-nervura-verde text-nervura-creme font-sans font-medium px-6 py-3 rounded transition-colors duration-200 hover:bg-nervura-verde-medio active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply border border-nervura-verde text-nervura-verde font-sans font-medium px-6 py-3 rounded transition-colors duration-200 hover:bg-nervura-verde hover:text-nervura-creme;
+  }
+
+  .card-produto {
+    @apply bg-nervura-branco-quente border border-nervura-borda rounded-lg overflow-hidden transition-shadow duration-200 hover:shadow-md;
+  }
+
+  .input-field {
+    @apply w-full border border-nervura-borda rounded-md px-3 py-2 bg-white text-nervura-texto-principal placeholder:text-nervura-texto-muted focus:outline-none focus:ring-2 focus:ring-nervura-verde focus:border-transparent transition-all duration-200;
+  }
+
+  .label {
+    @apply text-sm font-medium text-nervura-texto-secundario mb-1 block;
+  }
+
+  .badge-status {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+}

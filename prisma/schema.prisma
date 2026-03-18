@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Produto {
+  id          String       @id @default(cuid())
+  nome        String
+  slug        String       @unique
+  descricao   String
+  preco       Float
+  precoPromo  Float?
+  imagens     String[]
+  ativo       Boolean      @default(true)
+  destaque    Boolean      @default(false)
+  colecao     String // "copa-2026" | "canelado" | "basics"
+  material    String?
+  variacoes   Variacao[]
+  criadoEm    DateTime     @default(now())
+  atualizadoEm DateTime   @updatedAt
+  itens       ItemPedido[]
+}
+
+model Variacao {
+  id        String  @id @default(cuid())
+  produto   Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produtoId String
+  cor       String
+  tamanho   String // PP | P | M | G | GG
+  estoque   Int     @default(0)
+}
+
+model Pedido {
+  id          String       @id @default(cuid())
+  numero      String       @unique
+  status      String       @default("pendente")
+  // pendente | pago | enviado | entregue | cancelado
+  total       Float
+  desconto    Float        @default(0)
+  cupomUsado  String?
+  mpPaymentId String?
+  mpStatus    String?
+  pixQrCode   String?
+  pixCopiaCola String?
+  rastreio    String?
+  cliente     Cliente?     @relation(fields: [clienteId], references: [id])
+  clienteId   String?
+  nomeCliente String
+  emailCliente String
+  telefone    String?
+  cpf         String?
+  endereco    Json
+  itens       ItemPedido[]
+  criadoEm    DateTime     @default(now())
+  atualizadoEm DateTime   @updatedAt
+}
+
+model ItemPedido {
+  id        String  @id @default(cuid())
+  pedido    Pedido  @relation(fields: [pedidoId], references: [id])
+  pedidoId  String
+  produto   Produto @relation(fields: [produtoId], references: [id])
+  produtoId String
+  cor       String
+  tamanho   String
+  quantidade Int
+  precoUnit Float
+}
+
+model Cliente {
+  id       String   @id @default(cuid())
+  nome     String
+  email    String   @unique
+  telefone String?
+  cpf      String?
+  pedidos  Pedido[]
+  criadoEm DateTime @default(now())
+}
+
+model Cupom {
+  id         String    @id @default(cuid())
+  codigo     String    @unique
+  tipo       String // "percentual" | "fixo"
+  valor      Float
+  minPedido  Float?
+  maxUsos    Int?
+  usosAtuais Int       @default(0)
+  ativo      Boolean   @default(true)
+  expiraEm   DateTime?
+  criadoEm   DateTime  @default(now())
+}
+
+model Configuracao {
+  id             String  @id @default("config")
+  tikTokPixelId  String?
+  metaPixelId    String?
+  whatsappNumero String?
+  instagramUrl   String?
+  tiktokUrl      String?
+  facebookUrl    String?
+  crmApiKey      String?
+  crmTipo        String? // "rdstation" | "hubspot"
+  emailRemetente String?
+}
