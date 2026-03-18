@@ -26,7 +26,7 @@ interface Produto {
   imagens: string[];
   imagensPorCor?: Record<string, string[]> | null;
   video?: string | null;
-  colecao: string;
+  colecoes: string[];
   material?: string | null;
   variacoes: Variacao[];
 }

@@ -11,7 +11,7 @@ interface Produto {
   preco: number;
   precoPromo?: number | null;
   imagens: string[];
-  colecao: string;
+  colecoes: string[];
   destaque?: boolean;
 }
 
