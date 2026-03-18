@@ -43,13 +43,16 @@ function gerarVariacoes(cores: string[]) {
 async function main() {
   console.log("🌱 Iniciando seed...");
 
-  // Limpar dados existentes
-  await prisma.itemPedido.deleteMany();
-  await prisma.pedido.deleteMany();
-  await prisma.variacao.deleteMany();
-  await prisma.produto.deleteMany();
-  await prisma.cupom.deleteMany();
-  await prisma.configuracao.deleteMany();
+  // ⚠️ SEGURANÇA: só cria produtos exemplo se o banco estiver vazio
+  const totalProdutos = await prisma.produto.count();
+  const pularProdutos = totalProdutos > 0;
+
+  if (pularProdutos) {
+    console.log(`⏭️  ${totalProdutos} produtos já existem — pulando criação de produtos de exemplo.`);
+  }
+
+  // Configurações e aparência sempre fazem upsert (nunca deletam)
+  // Pedidos e produtos de usuário NUNCA são deletados pelo seed
 
   // === PRODUTOS COPA 2026 ===
   const produtosCopa = [
@@ -229,49 +232,39 @@ async function main() {
     },
   ];
 
-  // Criar todos os produtos
-  for (const p of [...produtosCopa, ...produtosCanelado, ...produtosBasics]) {
-    const cores = p.colecoes.includes("copa-2026") ? ["Verde", "Amarelo", "Branco"] : CORES;
-    await prisma.produto.create({
-      data: {
-        ...p,
-        precoPromo: p.precoPromo ?? null,
-        variacoes: { create: gerarVariacoes(cores) },
-      },
-    });
+  // Criar produtos de exemplo APENAS se banco estiver vazio
+  if (!pularProdutos) {
+    for (const p of [...produtosCopa, ...produtosCanelado, ...produtosBasics]) {
+      const cores = p.colecoes.includes("copa-2026") ? ["Verde", "Amarelo", "Branco"] : CORES;
+      await prisma.produto.create({
+        data: {
+          ...p,
+          precoPromo: p.precoPromo ?? null,
+          variacoes: { create: gerarVariacoes(cores) },
+        },
+      });
+    }
+    console.log("   • 16 produtos de exemplo criados");
   }
 
-  // === CUPONS ===
-  await prisma.cupom.createMany({
-    data: [
-      {
-        codigo: "COPA10",
-        tipo: "percentual",
-        valor: 10,
-        maxUsos: 500,
-        ativo: true,
-      },
-      {
-        codigo: "NERVURA20",
-        tipo: "fixo",
-        valor: 20,
-        minPedido: 150,
-        maxUsos: 200,
-        ativo: true,
-      },
-      {
-        codigo: "PRIMEIRACOMPRA",
-        tipo: "percentual",
-        valor: 15,
-        maxUsos: 1000,
-        ativo: true,
-      },
-    ],
-  });
+  // === CUPONS — só cria se não existirem ===
+  const cuponsExistentes = await prisma.cupom.count();
+  if (cuponsExistentes === 0) {
+    await prisma.cupom.createMany({
+      data: [
+        { codigo: "COPA10", tipo: "percentual", valor: 10, maxUsos: 500, ativo: true },
+        { codigo: "NERVURA20", tipo: "fixo", valor: 20, minPedido: 150, maxUsos: 200, ativo: true },
+        { codigo: "PRIMEIRACOMPRA", tipo: "percentual", valor: 15, maxUsos: 1000, ativo: true },
+      ],
+    });
+    console.log("   • 3 cupons criados");
+  }
 
-  // === CONFIGURAÇÃO ===
-  await prisma.configuracao.create({
-    data: {
+  // === CONFIGURAÇÃO — upsert seguro ===
+  await prisma.configuracao.upsert({
+    where: { id: "config" },
+    update: {},
+    create: {
       id: "config",
       whatsappNumero: process.env.NEXT_PUBLIC_WHATSAPP_NUMERO ?? "5541999999999",
       tikTokPixelId: process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID ?? "",
@@ -324,10 +317,9 @@ async function main() {
   });
 
   console.log("✅ Seed concluído com sucesso!");
-  console.log("   • 16 produtos criados (Copa 2026, Canelado, Basics)");
-  console.log("   • 3 cupons criados (COPA10, NERVURA20, PRIMEIRACOMPRA)");
-  console.log("   • Configuração inicial criada");
-  console.log("   • 3 coleções criadas na home");
+  console.log("   • Configuração e aparência: upsert seguro (dados existentes preservados)");
+  console.log("   • Coleções da home: recriadas");
+  console.log("   ⚠️  NUNCA apaga produtos, pedidos ou dados reais do usuário");
 }
 
 main()
