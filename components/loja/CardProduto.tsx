@@ -58,7 +58,7 @@ export function CardProduto({ produto }: CardProdutoProps) {
               -{descPct}%
             </span>
           )}
-          {produto.colecao === "copa-2026" && (
+          {Array.isArray(produto.colecoes) && produto.colecoes.includes("copa-2026") && (
             <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">
               Copa 2026
             </span>

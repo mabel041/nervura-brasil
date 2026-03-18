@@ -32,7 +32,7 @@ export default async function ProdutoPage({ params }: Props) {
 
   // Produtos relacionados
   const relacionados = await prisma.produto.findMany({
-    where: { colecao: produto.colecao, ativo: true, id: { not: produto.id } },
+    where: { colecoes: { hasSome: produto.colecoes }, ativo: true, id: { not: produto.id } },
     take: 4,
     include: { variacoes: true },
   });

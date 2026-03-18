@@ -78,7 +78,7 @@ export default async function AdminProdutosPage({
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600">{p.colecao}</td>
+                <td className="px-4 py-3 text-sm text-gray-600">{Array.isArray(p.colecoes) ? p.colecoes.join(", ") : ""}</td>
                 <td className="px-4 py-3 text-right text-sm font-medium">
                   {p.precoPromo ? (
                     <div>

@@ -163,10 +163,10 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
         <div className="space-y-6">
           <div>
             <Link
-              href={`/catalogo?colecao=${produto.colecao}`}
+              href={`/catalogo?colecao=${Array.isArray(produto.colecoes) ? produto.colecoes[0] : ""}`}
               className="text-nervura-ouro font-sans text-xs uppercase tracking-widest hover:text-nervura-verde transition-colors"
             >
-              {produto.colecao === "copa-2026" ? "Copa 2026" : produto.colecao}
+              {Array.isArray(produto.colecoes) && produto.colecoes.includes("copa-2026") ? "Copa 2026" : (produto.colecoes?.[0] ?? "")}
             </Link>
             <h1 className="font-serif text-3xl lg:text-4xl text-nervura-texto-principal mt-2">
               {produto.nome}
