@@ -39,7 +39,14 @@ export default async function ProdutoPage({ params }: Props) {
 
   return (
     <>
-      <ProdutoDetalhes produto={produto} relacionados={relacionados} />
+      <ProdutoDetalhes
+        produto={{
+          ...produto,
+          imagensPorCor: (produto.imagensPorCor as Record<string, string[]> | null) ?? null,
+        }}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        relacionados={relacionados.map((r) => ({ ...r, imagensPorCor: (r.imagensPorCor as Record<string, string[]> | null) ?? null })) as any}
+      />
       <RodapeSociais />
     </>
   );

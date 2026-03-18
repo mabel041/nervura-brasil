@@ -18,8 +18,9 @@ model Produto {
   descricao   String
   preco       Float
   precoPromo  Float?
-  imagens     String[]
-  video       String?
+  imagens      String[]
+  imagensPorCor Json?   // { "Amarelo": ["url1", "url2"], "Verde": ["url3"] }
+  video        String?
   ativo       Boolean      @default(true)
   destaque    Boolean      @default(false)
   colecoes    String[] // "copa-2026" | "canelado" | "basics"

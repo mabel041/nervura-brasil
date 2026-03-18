@@ -24,6 +24,7 @@ interface Produto {
   preco: number;
   precoPromo?: number | null;
   imagens: string[];
+  imagensPorCor?: Record<string, string[]> | null;
   video?: string | null;
   colecao: string;
   material?: string | null;
@@ -40,6 +41,7 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
   const [corSelecionada, setCorSelecionada] = useState<string>("");
   const [tamanhoSelecionado, setTamanhoSelecionado] = useState<string>("");
   const [adicionado, setAdicionado] = useState(false);
+  const [galeriaVisivel, setGaleriaVisivel] = useState(true);
   const { adicionarItem } = useCarrinho();
 
   const cores = Array.from(new Set(produto.variacoes.map((v) => v.cor)));
@@ -55,9 +57,18 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
     return estoqueDisponivel(corSelecionada, tamanho) > 0;
   };
 
+  // Determina a galeria ativa baseada na cor selecionada
+  const galeriaAtiva: string[] =
+    corSelecionada &&
+    produto.imagensPorCor &&
+    produto.imagensPorCor[corSelecionada] &&
+    produto.imagensPorCor[corSelecionada].length > 0
+      ? produto.imagensPorCor[corSelecionada]
+      : produto.imagens;
+
   const precoAtual = produto.precoPromo ?? produto.preco;
   const mostrarVideo = imagemSelecionada === -1 && produto.video;
-  const imagem = produto.imagens[imagemSelecionada] ?? produto.imagens[0];
+  const imagem = galeriaAtiva[imagemSelecionada] ?? galeriaAtiva[0];
 
   const handleAdicionarCarrinho = () => {
     if (!corSelecionada || !tamanhoSelecionado) return;
@@ -90,7 +101,10 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Galeria */}
         <div>
-          <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-nervura-creme-escuro">
+          <div
+            className="relative aspect-[3/4] rounded-xl overflow-hidden bg-nervura-creme-escuro transition-opacity duration-200"
+            style={{ opacity: galeriaVisivel ? 1 : 0 }}
+          >
             {mostrarVideo ? (
               <video
                 src={produto.video!}
@@ -111,8 +125,11 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
               />
             )}
           </div>
-          {(produto.imagens.length > 1 || produto.video) && (
-            <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+          {(galeriaAtiva.length > 1 || produto.video) && (
+            <div
+              className="flex gap-2 mt-3 overflow-x-auto pb-1 transition-opacity duration-200"
+              style={{ opacity: galeriaVisivel ? 1 : 0 }}
+            >
               {produto.video && (
                 <button
                   onClick={() => setImagemSelecionada(-1)}
@@ -125,7 +142,7 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
                   <span className="text-white text-2xl">▶</span>
                 </button>
               )}
-              {produto.imagens.map((img, i) => (
+              {galeriaAtiva.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setImagemSelecionada(i)}
@@ -178,12 +195,23 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
                 <button
                   key={cor}
                   onClick={() => {
-                    setCorSelecionada(cor);
-                    setTamanhoSelecionado("");
-                    const corIndex = cores.indexOf(cor);
-                    if (corIndex < produto.imagens.length) {
-                      setImagemSelecionada(corIndex);
-                    }
+                    setGaleriaVisivel(false);
+                    setTimeout(() => {
+                      setCorSelecionada(cor);
+                      setTamanhoSelecionado("");
+                      // Se há imagens específicas para a cor, começa na primeira; senão, usa índice da cor
+                      const temImagensCor =
+                        produto.imagensPorCor &&
+                        produto.imagensPorCor[cor] &&
+                        produto.imagensPorCor[cor].length > 0;
+                      if (temImagensCor) {
+                        setImagemSelecionada(0);
+                      } else {
+                        const corIndex = cores.indexOf(cor);
+                        setImagemSelecionada(corIndex < produto.imagens.length ? corIndex : 0);
+                      }
+                      setGaleriaVisivel(true);
+                    }, 200);
                   }}
                   className={`border rounded-md px-4 py-2 text-sm transition-all ${
                     corSelecionada === cor

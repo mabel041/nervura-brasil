@@ -33,6 +33,7 @@ interface Produto {
   destaque: boolean;
   ativo: boolean;
   imagens: string[];
+  imagensPorCor?: Record<string, string[]> | null;
   video?: string | null;
   variacoes: Array<{ id: string; cor: string; tamanho: string; estoque: number }>;
 }
@@ -54,6 +55,12 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
       { cor: "", tamanho: "P", estoque: 10 },
     ]
   );
+  const [imagensPorCor, setImagensPorCor] = useState<Record<string, string[]>>(
+    (produto?.imagensPorCor as Record<string, string[]>) ?? {}
+  );
+  const [expandidoPorCor, setExpandidoPorCor] = useState<Record<string, boolean>>({});
+  const [uploadCorLoading, setUploadCorLoading] = useState<Record<string, boolean>>({});
+  const [uploadCorErro, setUploadCorErro] = useState<Record<string, string>>({});
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadErro, setUploadErro] = useState("");
   const [saving, setSaving] = useState(false);
@@ -113,6 +120,43 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     setUploadLoading(false);
   };
 
+  const handleUploadCor = async (cor: string, files: FileList | null) => {
+    if (!files || !cor) return;
+    const atual = imagensPorCor[cor] ?? [];
+    if (atual.length >= 8) return;
+    setUploadCorLoading((prev) => ({ ...prev, [cor]: true }));
+    setUploadCorErro((prev) => ({ ...prev, [cor]: "" }));
+
+    for (const file of Array.from(files).slice(0, 8 - atual.length)) {
+      if (file.size > 10 * 1024 * 1024) {
+        setUploadCorErro((prev) => ({ ...prev, [cor]: `"${file.name}" muito grande (máx 10MB).` }));
+        continue;
+      }
+      const ext = file.name.split(".").pop();
+      const filename = `produtos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage
+        .from("produtos")
+        .upload(filename, file, { contentType: file.type, upsert: false });
+      if (error) {
+        setUploadCorErro((prev) => ({ ...prev, [cor]: `Erro: ${error.message}` }));
+      } else {
+        const { data } = supabase.storage.from("produtos").getPublicUrl(filename);
+        setImagensPorCor((prev) => ({
+          ...prev,
+          [cor]: [...(prev[cor] ?? []), data.publicUrl],
+        }));
+      }
+    }
+    setUploadCorLoading((prev) => ({ ...prev, [cor]: false }));
+  };
+
+  const removerImagemCor = (cor: string, idx: number) => {
+    setImagensPorCor((prev) => ({
+      ...prev,
+      [cor]: (prev[cor] ?? []).filter((_, i) => i !== idx),
+    }));
+  };
+
   const adicionarVariacao = () => {
     setVariacoes((prev) => [...prev, { cor: "", tamanho: "M", estoque: 10 }]);
   };
@@ -147,7 +191,7 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
   const onSubmit = async (data: ProdutoFormData) => {
     setSaving(true);
     setErro("");
-    const body = { ...data, imagens, video: video || null, variacoes };
+    const body = { ...data, imagens, video: video || null, variacoes, imagensPorCor };
 
     const url = produto ? `/api/admin/produtos/${produto.id}` : "/api/admin/produtos";
     const method = produto ? "PUT" : "POST";
@@ -327,34 +371,116 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             <Plus size={14} /> Adicionar
           </button>
         </div>
-        <div className="space-y-3">
-          {variacoes.map((v, i) => (
-            <div key={i} className="flex gap-3 items-center">
-              <input
-                value={v.cor}
-                onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, cor: e.target.value } : item))}
-                placeholder="Cor"
-                className="input-field flex-1"
-              />
-              <select
-                value={v.tamanho}
-                onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, tamanho: e.target.value } : item))}
-                className="input-field w-24"
-              >
-                {TAMANHOS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-              <input
-                type="number"
-                value={v.estoque}
-                onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, estoque: parseInt(e.target.value) } : item))}
-                className="input-field w-20"
-                min={0}
-              />
-              <button type="button" onClick={() => removerVariacao(i)} className="text-red-400 hover:text-red-600 p-1">
-                <Trash2 size={16} />
-              </button>
-            </div>
-          ))}
+        <div className="space-y-4">
+          {variacoes.map((v, i) => {
+            // Compute unique colors that have appeared before this index (for grouping photo sections)
+            const coresAnteriores = variacoes.slice(0, i).map((x) => x.cor);
+            const primeiraOcorrenciaDaCor = !coresAnteriores.includes(v.cor);
+            const corValida = v.cor.trim() !== "";
+
+            return (
+              <div key={i} className="space-y-2">
+                <div className="flex gap-3 items-center">
+                  <input
+                    value={v.cor}
+                    onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, cor: e.target.value } : item))}
+                    placeholder="Cor"
+                    className="input-field flex-1"
+                  />
+                  <select
+                    value={v.tamanho}
+                    onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, tamanho: e.target.value } : item))}
+                    className="input-field w-24"
+                  >
+                    {TAMANHOS.map((t) => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                  <input
+                    type="number"
+                    value={v.estoque}
+                    onChange={(e) => setVariacoes((prev) => prev.map((item, idx) => idx === i ? { ...item, estoque: parseInt(e.target.value) } : item))}
+                    className="input-field w-20"
+                    min={0}
+                  />
+                  <button type="button" onClick={() => removerVariacao(i)} className="text-red-400 hover:text-red-600 p-1">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+
+                {/* Fotos por cor — aparece apenas na primeira ocorrência de cada cor */}
+                {corValida && primeiraOcorrenciaDaCor && (
+                  <div className="ml-4 border-l-2 border-nervura-borda pl-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandidoPorCor((prev) => ({ ...prev, [v.cor]: !prev[v.cor] }))
+                      }
+                      className="flex items-center gap-2 text-sm text-nervura-texto-secundario hover:text-nervura-verde transition-colors"
+                    >
+                      <span>📷</span>
+                      <span>
+                        Fotos desta cor ({v.cor})
+                        {(imagensPorCor[v.cor]?.length ?? 0) > 0 && (
+                          <span className="ml-1 text-nervura-verde font-medium">
+                            — {imagensPorCor[v.cor].length} foto{imagensPorCor[v.cor].length > 1 ? "s" : ""}
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-xs text-nervura-texto-muted">
+                        {expandidoPorCor[v.cor] ? "▲" : "▼"}
+                      </span>
+                    </button>
+
+                    {expandidoPorCor[v.cor] && (
+                      <div className="mt-3 space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                          {(imagensPorCor[v.cor] ?? []).map((img, idx) => (
+                            <div key={idx} className="relative w-16 h-20 rounded-md overflow-hidden group">
+                              <Image src={img} alt={`${v.cor} ${idx + 1}`} fill className="object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => removerImagemCor(v.cor, idx)}
+                                className="absolute top-0.5 right-0.5 bg-black/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+
+                          {(imagensPorCor[v.cor]?.length ?? 0) < 8 && (
+                            <label className="w-16 h-20 rounded-md border-2 border-dashed border-nervura-borda flex flex-col items-center justify-center cursor-pointer hover:border-nervura-verde transition-colors">
+                              {uploadCorLoading[v.cor] ? (
+                                <Loader2 size={14} className="animate-spin text-nervura-verde" />
+                              ) : (
+                                <>
+                                  <Upload size={14} className="text-nervura-texto-muted mb-1" />
+                                  <span className="text-[10px] text-nervura-texto-muted text-center leading-tight">Adicionar foto</span>
+                                </>
+                              )}
+                              <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                className="hidden"
+                                onChange={(e) => handleUploadCor(v.cor, e.target.files)}
+                                disabled={uploadCorLoading[v.cor]}
+                              />
+                            </label>
+                          )}
+                        </div>
+
+                        {uploadCorErro[v.cor] && (
+                          <p className="text-xs text-red-600">{uploadCorErro[v.cor]}</p>
+                        )}
+                        <p className="text-xs text-nervura-texto-muted">
+                          Estas fotos substituem as imagens gerais quando o cliente selecionar a cor <strong>{v.cor}</strong>.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

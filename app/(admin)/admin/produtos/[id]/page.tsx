@@ -24,7 +24,12 @@ export default async function EditarProdutoPage({ params }: { params: { id: stri
   return (
     <div className="p-6">
       <h1 className="font-serif text-3xl mb-6">Editar Produto</h1>
-      <ProdutoForm produto={produto} />
+      <ProdutoForm
+        produto={{
+          ...produto,
+          imagensPorCor: (produto.imagensPorCor as Record<string, string[]> | null) ?? null,
+        }}
+      />
     </div>
   );
 }
