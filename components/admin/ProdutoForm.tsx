@@ -128,7 +128,7 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     }
   };
 
-  const TAMANHOS = ["PP", "P", "M", "G", "GG"];
+  const TAMANHOS = ["Único", "PP", "P", "M", "G", "GG"];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-3xl">
