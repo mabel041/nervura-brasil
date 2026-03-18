@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 import { CardProduto } from "@/components/loja/CardProduto";
 import { RodapeSociais } from "@/components/loja/RodapeSociais";
 import { ContadorCopa } from "@/components/loja/ContadorCopa";
