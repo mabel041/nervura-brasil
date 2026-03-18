@@ -24,6 +24,7 @@ interface Produto {
   preco: number;
   precoPromo?: number | null;
   imagens: string[];
+  video?: string | null;
   colecao: string;
   material?: string | null;
   variacoes: Variacao[];
@@ -55,6 +56,7 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
   };
 
   const precoAtual = produto.precoPromo ?? produto.preco;
+  const mostrarVideo = imagemSelecionada === -1 && produto.video;
   const imagem = produto.imagens[imagemSelecionada] ?? produto.imagens[0];
 
   const handleAdicionarCarrinho = () => {
@@ -89,17 +91,40 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
         {/* Galeria */}
         <div>
           <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-nervura-creme-escuro">
-            <Image
-              src={imagem}
-              alt={produto.nome}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
+            {mostrarVideo ? (
+              <video
+                src={produto.video!}
+                controls
+                autoPlay
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <Image
+                src={imagem}
+                alt={produto.nome}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+            )}
           </div>
-          {produto.imagens.length > 1 && (
+          {(produto.imagens.length > 1 || produto.video) && (
             <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+              {produto.video && (
+                <button
+                  onClick={() => setImagemSelecionada(-1)}
+                  className={`relative flex-shrink-0 w-16 h-20 rounded-md overflow-hidden border-2 transition-all bg-black flex items-center justify-center ${
+                    imagemSelecionada === -1
+                      ? "border-nervura-verde"
+                      : "border-transparent hover:border-nervura-borda"
+                  }`}
+                >
+                  <span className="text-white text-2xl">▶</span>
+                </button>
+              )}
               {produto.imagens.map((img, i) => (
                 <button
                   key={i}

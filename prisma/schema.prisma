@@ -19,6 +19,7 @@ model Produto {
   preco       Float
   precoPromo  Float?
   imagens     String[]
+  video       String?
   ativo       Boolean      @default(true)
   destaque    Boolean      @default(false)
   colecao     String // "copa-2026" | "canelado" | "basics"

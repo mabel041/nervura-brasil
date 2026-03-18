@@ -39,6 +39,9 @@ interface Produto {
 export function ProdutoForm({ produto }: { produto?: Produto }) {
   const router = useRouter();
   const [imagens, setImagens] = useState<string[]>(produto?.imagens ?? []);
+  const [video, setVideo] = useState<string>(produto?.video ?? "");
+  const [videoLoading, setVideoLoading] = useState(false);
+  const [videoErro, setVideoErro] = useState("");
   const [variacoes, setVariacoes] = useState<Variacao[]>(
     produto?.variacoes.map((v) => ({ cor: v.cor, tamanho: v.tamanho, estoque: v.estoque })) ?? [
       { cor: "", tamanho: "P", estoque: 10 },
@@ -104,10 +107,33 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
     setVariacoes((prev) => prev.filter((_, idx) => idx !== i));
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      setVideoErro("Vídeo muito grande. Máximo: 50MB.");
+      return;
+    }
+    setVideoLoading(true);
+    setVideoErro("");
+    try {
+      const ext = file.name.split(".").pop();
+      const filename = `videos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("produtos").upload(filename, file, { contentType: file.type });
+      if (error) { setVideoErro(`Erro: ${error.message}`); return; }
+      const { data } = supabase.storage.from("produtos").getPublicUrl(filename);
+      setVideo(data.publicUrl);
+    } catch {
+      setVideoErro("Erro de rede ao enviar o vídeo.");
+    } finally {
+      setVideoLoading(false);
+    }
+  };
+
   const onSubmit = async (data: ProdutoFormData) => {
     setSaving(true);
     setErro("");
-    const body = { ...data, imagens, variacoes };
+    const body = { ...data, imagens, video: video || null, variacoes };
 
     const url = produto ? `/api/admin/produtos/${produto.id}` : "/api/admin/produtos";
     const method = produto ? "PUT" : "POST";
@@ -235,6 +261,41 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 flex items-start gap-2">
             <span className="font-bold shrink-0">⚠️ Erro no upload:</span>
             <span>{uploadErro}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Vídeo */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+        <h2 className="font-serif text-xl">Vídeo do Produto (opcional)</h2>
+        <p className="text-xs text-nervura-texto-muted bg-nervura-creme rounded-lg px-3 py-2 border border-nervura-borda">
+          🎥 Formatos aceitos: MP4, MOV, WEBM. Máximo: 50MB. Aparece na página do produto antes das fotos.
+        </p>
+        {video ? (
+          <div className="relative rounded-xl overflow-hidden bg-black aspect-[9/16] max-w-[200px]">
+            <video src={video} controls className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => setVideo("")}
+              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        ) : (
+          <label className="flex flex-col items-center justify-center border-2 border-dashed border-nervura-borda rounded-xl p-8 cursor-pointer hover:border-nervura-verde transition-colors">
+            {videoLoading ? (
+              <><Loader2 size={24} className="animate-spin text-nervura-verde mb-2" /><span className="text-sm text-nervura-texto-muted">Enviando vídeo...</span></>
+            ) : (
+              <><Upload size={24} className="text-nervura-texto-muted mb-2" /><span className="text-sm text-nervura-texto-muted">Clique para subir um vídeo</span><span className="text-xs text-nervura-texto-muted mt-1">MP4, MOV, WEBM • máx 50MB</span></>
+            )}
+            <input type="file" accept="video/mp4,video/mov,video/webm,video/quicktime" className="hidden" onChange={handleVideoUpload} disabled={videoLoading} />
+          </label>
+        )}
+        {videoErro && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 flex items-start gap-2">
+            <span className="font-bold shrink-0">⚠️ Erro no vídeo:</span>
+            <span>{videoErro}</span>
           </div>
         )}
       </div>
