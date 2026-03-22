@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Layers,
   Palette,
+  MessageSquare,
 } from "lucide-react";
 
 const links = [
@@ -21,6 +22,7 @@ const links = [
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingBag },
   { href: "/admin/promocoes", label: "Promoções", icon: Tag },
   { href: "/admin/colecoes", label: "Coleções", icon: Layers },
+  { href: "/admin/reviews", label: "Avaliações", icon: MessageSquare },
   { href: "/admin/aparencia", label: "Aparência", icon: Palette },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];

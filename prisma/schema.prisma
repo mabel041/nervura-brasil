@@ -30,6 +30,20 @@ model Produto {
   criadoEm     DateTime     @default(now())
   atualizadoEm DateTime     @updatedAt
   itens        ItemPedido[]
+  reviews      Review[]
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produtoId  String
+  nome       String
+  email      String
+  nota       Int      // 1 a 5
+  titulo     String?
+  comentario String
+  aprovado   Boolean  @default(false)
+  criadoEm  DateTime @default(now())
 }
 
 model Variacao {

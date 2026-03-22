@@ -10,7 +10,9 @@
       "WebFetch(domain:api.superfrete.com)",
       "Bash(npx tsx:*)",
       "Bash(node --loader tsx/esm -e \":*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(where npm:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
