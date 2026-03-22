@@ -9,6 +9,9 @@ declare global {
     fbq?: (...args: any[]) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ttq?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    gtag?: (...args: any[]) => void;
+    dataLayer?: unknown[];
   }
 }
 
@@ -23,7 +26,13 @@ export function trackEvent(event: string, data?: Record<string, unknown>) {
   }
 }
 
-export function PixelProvider() {
+export function PixelProvider({
+  googleAnalyticsId,
+  googleAdsId,
+}: {
+  googleAnalyticsId?: string | null;
+  googleAdsId?: string | null;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
@@ -31,6 +40,27 @@ export function PixelProvider() {
 
   // Injetar scripts na montagem
   useEffect(() => {
+    // Google Analytics 4 + Google Ads (compartilham o gtag)
+    const gaId = googleAnalyticsId;
+    const adsId = googleAdsId;
+    if ((gaId || adsId) && !window.gtag) {
+      const trackingId = gaId || adsId!;
+      const gtagScript = document.createElement("script");
+      gtagScript.async = true;
+      gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${trackingId}`;
+      document.head.appendChild(gtagScript);
+
+      const inlineScript = document.createElement("script");
+      inlineScript.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        ${gaId ? `gtag('config', '${gaId}');` : ""}
+        ${adsId ? `gtag('config', '${adsId}');` : ""}
+      `;
+      document.head.appendChild(inlineScript);
+    }
+
     // Meta Pixel
     if (metaPixelId && !window.fbq) {
       const script = document.createElement("script");
@@ -61,7 +91,7 @@ export function PixelProvider() {
       `;
       document.head.appendChild(script);
     }
-  }, [metaPixelId, tiktokPixelId]);
+  }, [metaPixelId, tiktokPixelId, googleAnalyticsId, googleAdsId]);
 
   // PageView em cada mudança de rota
   useEffect(() => {

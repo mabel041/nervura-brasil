@@ -175,6 +175,8 @@ model Configuracao {
   tiktokUrl      String?
   facebookUrl    String?
   crmApiKey      String?
-  crmTipo        String? // "rdstation" | "hubspot"
-  emailRemetente String?
+  crmTipo           String? // "rdstation" | "hubspot"
+  emailRemetente    String?
+  googleAnalyticsId String?
+  googleAdsId       String?
 }

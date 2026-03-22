@@ -8,6 +8,8 @@ import { Loader2, Save } from "lucide-react";
 interface ConfigData {
   tikTokPixelId?: string | null;
   metaPixelId?: string | null;
+  googleAnalyticsId?: string | null;
+  googleAdsId?: string | null;
   whatsappNumero?: string | null;
   instagramUrl?: string | null;
   tiktokUrl?: string | null;
@@ -26,6 +28,8 @@ export function ConfigForm({ config }: { config: ConfigData | null }) {
     defaultValues: {
       tikTokPixelId: config?.tikTokPixelId ?? "",
       metaPixelId: config?.metaPixelId ?? "",
+      googleAnalyticsId: config?.googleAnalyticsId ?? "",
+      googleAdsId: config?.googleAdsId ?? "",
       whatsappNumero: config?.whatsappNumero ?? "",
       instagramUrl: config?.instagramUrl ?? "",
       tiktokUrl: config?.tiktokUrl ?? "",
@@ -62,6 +66,16 @@ export function ConfigForm({ config }: { config: ConfigData | null }) {
         <div>
           <label className="label">TikTok Pixel ID</label>
           <input {...register("tikTokPixelId")} className="input-field" placeholder="C8ABCDE12345..." />
+        </div>
+        <div>
+          <label className="label">Google Analytics 4 — Measurement ID</label>
+          <input {...register("googleAnalyticsId")} className="input-field" placeholder="G-XXXXXXXXXX" />
+          <p className="text-xs text-gray-400 mt-1">Encontre em: Analytics → Admin → Fluxos de dados → ID de medição</p>
+        </div>
+        <div>
+          <label className="label">Google Ads — ID de conversão</label>
+          <input {...register("googleAdsId")} className="input-field" placeholder="AW-XXXXXXXXX" />
+          <p className="text-xs text-gray-400 mt-1">Encontre em: Google Ads → Ferramentas → Conversões → Tag do Google</p>
         </div>
       </div>
 

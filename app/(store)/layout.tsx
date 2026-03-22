@@ -4,12 +4,21 @@ import { BannerPromocao } from "@/components/loja/BannerPromocao";
 import { BotaoWhatsApp } from "@/components/loja/BotaoWhatsApp";
 import { PixelProvider } from "@/components/PixelProvider";
 import { BarraPagamentos } from "@/components/loja/BarraPagamentos";
+import { prisma } from "@/lib/prisma";
 
-export default function StoreLayout({ children }: { children: React.ReactNode }) {
+async function getConfig() {
+  return prisma.configuracao.findUnique({ where: { id: "config" } });
+}
+
+export default async function StoreLayout({ children }: { children: React.ReactNode }) {
+  const config = await getConfig();
   return (
     <>
       <Suspense>
-        <PixelProvider />
+        <PixelProvider
+          googleAnalyticsId={config?.googleAnalyticsId}
+          googleAdsId={config?.googleAdsId}
+        />
       </Suspense>
       <BannerPromocao
         texto="🏆 Coleção Copa 2026 chegou! Use COPA10 para 10% off"
