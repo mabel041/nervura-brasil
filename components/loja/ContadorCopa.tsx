@@ -22,9 +22,12 @@ function calcular(): Tempo {
 }
 
 export function ContadorCopa() {
-  const [tempo, setTempo] = useState<Tempo>(calcular());
+  const [tempo, setTempo] = useState<Tempo>({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
+  const [montado, setMontado] = useState(false);
 
   useEffect(() => {
+    setMontado(true);
+    setTempo(calcular());
     const timer = setInterval(() => setTempo(calcular()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -35,6 +38,8 @@ export function ContadorCopa() {
     { valor: tempo.minutos, label: "min" },
     { valor: tempo.segundos, label: "seg" },
   ];
+
+  if (!montado) return null;
 
   return (
     <div className="flex items-center justify-center gap-4">
