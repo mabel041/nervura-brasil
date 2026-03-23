@@ -17,8 +17,8 @@ async function buildSystemPrompt() {
 
   const listaProdutos = produtos
     .map((p) => {
-      const cores = [...new Set(p.variacoes.map((v) => v.cor))].join(", ");
-      const tamanhos = [...new Set(p.variacoes.map((v) => v.tamanho))].join(", ");
+      const cores = Array.from(new Set(p.variacoes.map((v) => v.cor))).join(", ");
+      const tamanhos = Array.from(new Set(p.variacoes.map((v) => v.tamanho))).join(", ");
       const estoque = p.variacoes.reduce((acc, v) => acc + v.estoque, 0);
       const preco = p.precoPromo
         ? `R$ ${p.precoPromo.toFixed(2).replace(".", ",")} (promo, de R$ ${p.preco.toFixed(2).replace(".", ",")})`
