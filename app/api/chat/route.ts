@@ -90,10 +90,12 @@ export async function POST(req: NextRequest) {
           const response = await groq.chat.completions.create({
             model: "llama-3.1-8b-instant",
             max_tokens: 600,
-            stream: true,
-            system: systemPrompt,
-            messages: messages.slice(-10),
-          } as Parameters<typeof groq.chat.completions.create>[0]);
+            stream: true as const,
+            messages: [
+              { role: "system" as const, content: systemPrompt },
+              ...messages.slice(-10),
+            ],
+          });
 
           for await (const chunk of response) {
             const texto = chunk.choices[0]?.delta?.content ?? "";
