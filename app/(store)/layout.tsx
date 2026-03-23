@@ -5,6 +5,7 @@ import { BotaoWhatsApp } from "@/components/loja/BotaoWhatsApp";
 import { PixelProvider } from "@/components/PixelProvider";
 import { BarraPagamentos } from "@/components/loja/BarraPagamentos";
 import { RodapeSociais } from "@/components/loja/RodapeSociais";
+import { ChatWidget } from "@/components/loja/ChatWidget";
 import { prisma } from "@/lib/prisma";
 
 async function getConfig() {
@@ -36,6 +37,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
         whatsappNumero={config?.whatsappNumero ?? undefined}
       />
       <BotaoWhatsApp />
+      <ChatWidget />
     </>
   );
 }
