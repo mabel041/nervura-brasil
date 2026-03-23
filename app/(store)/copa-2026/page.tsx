@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 import { CardProduto } from "@/components/loja/CardProduto";
 import { ContadorCopa } from "@/components/loja/ContadorCopa";
-import { RodapeSociais } from "@/components/loja/RodapeSociais";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -84,8 +83,6 @@ export default async function Copa2026Page() {
           </div>
         )}
       </section>
-
-      <RodapeSociais />
     </>
   );
 }

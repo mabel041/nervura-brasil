@@ -4,6 +4,7 @@ import { BannerPromocao } from "@/components/loja/BannerPromocao";
 import { BotaoWhatsApp } from "@/components/loja/BotaoWhatsApp";
 import { PixelProvider } from "@/components/PixelProvider";
 import { BarraPagamentos } from "@/components/loja/BarraPagamentos";
+import { RodapeSociais } from "@/components/loja/RodapeSociais";
 import { prisma } from "@/lib/prisma";
 
 async function getConfig() {
@@ -28,6 +29,12 @@ export default async function StoreLayout({ children }: { children: React.ReactN
       <Header />
       <main className="min-h-screen">{children}</main>
       <BarraPagamentos />
+      <RodapeSociais
+        instagramUrl={config?.instagramUrl ?? undefined}
+        tiktokUrl={config?.tiktokUrl ?? undefined}
+        facebookUrl={config?.facebookUrl ?? undefined}
+        whatsappNumero={config?.whatsappNumero ?? undefined}
+      />
       <BotaoWhatsApp />
     </>
   );

@@ -6,7 +6,6 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 import { CardProduto } from "@/components/loja/CardProduto";
 import { FiltrosCatalogo } from "@/components/loja/FiltrosCatalogo";
-import { RodapeSociais } from "@/components/loja/RodapeSociais";
 
 interface SearchParams {
   colecao?: string;
@@ -154,8 +153,6 @@ export default async function CatalogoPage({
           </div>
         </div>
       </div>
-
-      <RodapeSociais />
     </>
   );
 }

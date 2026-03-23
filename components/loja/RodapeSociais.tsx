@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Mail } from "lucide-react";
 
 interface RodapeSociaisProps {
   instagramUrl?: string;
@@ -107,32 +108,20 @@ export function RodapeSociais({
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               {instagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2"
-                >
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
                   <IconeInstagram /> Instagram
                 </a>
               )}
               {tiktokUrl && (
-                <a
-                  href={tiktokUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2"
-                >
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
                   <IconeTikTok /> TikTok
                 </a>
               )}
               {facebookUrl && (
-                <a
-                  href={facebookUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2"
-                >
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                     <rect width="24" height="24" rx="5" fill="#1877F2" />
                     <path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="white" />
@@ -140,20 +129,40 @@ export function RodapeSociais({
                   Facebook
                 </a>
               )}
-              <a
-                href={`https://wa.me/${tel}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2"
-              >
+              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer"
+                className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
                 <IconeWhatsApp /> WhatsApp
               </a>
             </div>
           </div>
+
+          {/* Contato */}
+          <div>
+            <h4 className="font-sans font-semibold text-nervura-ouro mb-4 uppercase text-xs tracking-widest">
+              Contato
+            </h4>
+            <div className="flex flex-col gap-3 text-sm">
+              <a href="mailto:contato@nervurabrasil.com"
+                className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
+                <Mail size={18} /> contato@nervurabrasil.com
+              </a>
+              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer"
+                className="text-nervura-texto-muted hover:text-nervura-creme transition-colors flex items-center gap-2">
+                <IconeWhatsApp /> Falar no WhatsApp
+              </a>
+              <p className="text-nervura-texto-muted text-xs mt-1 leading-relaxed">
+                Seg–Sex, 9h às 18h<br />
+                Respondemos em até 24h
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="border-t border-nervura-verde-medio mt-8 pt-6 text-center text-xs text-nervura-texto-muted">
-          © {new Date().getFullYear()} Nervura Brasil. Todos os direitos reservados.
+        <div className="border-t border-nervura-verde-medio mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-nervura-texto-muted">
+          <span>© {new Date().getFullYear()} Nervura Brasil. Todos os direitos reservados.</span>
+          <a href="mailto:contato@nervurabrasil.com" className="hover:text-nervura-creme transition-colors">
+            contato@nervurabrasil.com
+          </a>
         </div>
       </div>
     </footer>

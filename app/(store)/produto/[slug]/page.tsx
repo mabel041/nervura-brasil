@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProdutoDetalhes } from "@/components/loja/ProdutoDetalhes";
-import { RodapeSociais } from "@/components/loja/RodapeSociais";
 import { Reviews } from "@/components/loja/Reviews";
 import type { Metadata } from "next";
 
@@ -50,8 +49,6 @@ export default async function ProdutoPage({ params }: Props) {
       />
       <div className="border-t border-nervura-borda bg-nervura-branco-quente">
         <Reviews produtoId={produto.id} />
-      </div>
-      <RodapeSociais />
-    </>
+      </div>    </>
   );
 }
