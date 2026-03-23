@@ -4,6 +4,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate, STATUS_LABELS } from "@/lib/utils";
 import { ConfirmacaoPIX } from "@/components/loja/ConfirmacaoPIX";
+import { GoogleAdsConversao } from "@/components/loja/GoogleAdsConversao";
 import { CheckCircle, Package } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -17,11 +18,21 @@ export default async function PedidoPage({ params }: { params: { id: string } })
 
   if (!pedido) notFound();
 
+  const config = await prisma.configuracao.findUnique({ where: { id: "config" } });
   const isPendentePIX = pedido.mpStatus === "pending" && pedido.pixQrCode;
+  const pedidoPago = pedido.mpStatus === "approved" || pedido.status === "pago";
   const status = STATUS_LABELS[pedido.status];
 
   return (
     <div className="min-h-screen bg-nervura-creme py-10 px-4">
+      {/* Dispara conversão Google Ads apenas quando pedido está pago */}
+      {pedidoPago && config?.googleAdsConversionId && (
+        <GoogleAdsConversao
+          conversionId={config.googleAdsConversionId}
+          transactionId={pedido.numero}
+          valor={pedido.total}
+        />
+      )}
       <div className="max-w-2xl mx-auto">
         {isPendentePIX ? (
           <ConfirmacaoPIX

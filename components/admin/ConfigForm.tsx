@@ -10,6 +10,7 @@ interface ConfigData {
   metaPixelId?: string | null;
   googleAnalyticsId?: string | null;
   googleAdsId?: string | null;
+  googleAdsConversionId?: string | null;
   whatsappNumero?: string | null;
   instagramUrl?: string | null;
   tiktokUrl?: string | null;
@@ -30,6 +31,7 @@ export function ConfigForm({ config }: { config: ConfigData | null }) {
       metaPixelId: config?.metaPixelId ?? "",
       googleAnalyticsId: config?.googleAnalyticsId ?? "",
       googleAdsId: config?.googleAdsId ?? "",
+      googleAdsConversionId: config?.googleAdsConversionId ?? "",
       whatsappNumero: config?.whatsappNumero ?? "",
       instagramUrl: config?.instagramUrl ?? "",
       tiktokUrl: config?.tiktokUrl ?? "",
@@ -76,6 +78,11 @@ export function ConfigForm({ config }: { config: ConfigData | null }) {
           <label className="label">Google Ads — ID de conversão</label>
           <input {...register("googleAdsId")} className="input-field" placeholder="AW-XXXXXXXXX" />
           <p className="text-xs text-gray-400 mt-1">Encontre em: Google Ads → Ferramentas → Conversões → Tag do Google</p>
+        </div>
+        <div>
+          <label className="label">Google Ads — ID de conversão de compra</label>
+          <input {...register("googleAdsConversionId")} className="input-field" placeholder="AW-17868003171/eKr3CIi52I0cEOOukMhC" />
+          <p className="text-xs text-gray-400 mt-1">Dispara automaticamente quando o pedido é confirmado. Encontre em: Google Ads → Metas → Conversões → selecione "Compra" → ver tag do evento</p>
         </div>
       </div>
 

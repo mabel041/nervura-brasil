@@ -191,6 +191,7 @@ model Configuracao {
   crmApiKey      String?
   crmTipo           String? // "rdstation" | "hubspot"
   emailRemetente    String?
-  googleAnalyticsId String?
-  googleAdsId       String?
+  googleAnalyticsId     String?
+  googleAdsId           String?
+  googleAdsConversionId String? // ex: AW-17868003171/eKr3CIi52I0cEOOukMhC
 }
