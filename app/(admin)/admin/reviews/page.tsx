@@ -29,9 +29,31 @@ export default function ReviewsAdminPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filtro, setFiltro] = useState<"todos" | "pendentes" | "aprovados">("pendentes");
 
+  const [erro, setErro] = useState<string | null>(null);
+  const [carregando, setCarregando] = useState(true);
+
   async function carregar() {
-    const res = await fetch("/api/admin/reviews");
-    setReviews(await res.json());
+    setCarregando(true);
+    setErro(null);
+    try {
+      const res = await fetch("/api/admin/reviews");
+      if (!res.ok) {
+        setErro(`Erro HTTP ${res.status}: ${res.statusText}`);
+        return;
+      }
+      const contentType = res.headers.get("content-type");
+      if (!contentType?.includes("application/json")) {
+        setErro("Sessão expirada. Faça login novamente.");
+        window.location.href = "/admin/login";
+        return;
+      }
+      const data = await res.json();
+      setReviews(Array.isArray(data) ? data : []);
+    } catch (e) {
+      setErro(`Erro ao carregar: ${e}`);
+    } finally {
+      setCarregando(false);
+    }
   }
 
   useEffect(() => { carregar(); }, []);
@@ -88,13 +110,21 @@ export default function ReviewsAdminPage() {
         ))}
       </div>
 
+      {/* Loading / Erro */}
+      {carregando && (
+        <div className="text-center py-16 text-nervura-texto-muted">Carregando avaliações...</div>
+      )}
+      {erro && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">{erro}</div>
+      )}
+
       {/* Lista */}
-      {filtrados.length === 0 ? (
+      {!carregando && !erro && filtrados.length === 0 ? (
         <div className="text-center py-16 text-nervura-texto-muted bg-white rounded-xl border border-nervura-borda">
           <MessageSquare size={40} className="mx-auto mb-3 opacity-30" />
           <p>Nenhuma avaliação {filtro === "pendentes" ? "pendente" : filtro === "aprovados" ? "aprovada" : ""}</p>
         </div>
-      ) : (
+      ) : !carregando && !erro ? (
         <div className="space-y-3">
           {filtrados.map((r) => (
             <div key={r.id} className={`bg-white border rounded-xl p-5 space-y-3 ${!r.aprovado ? "border-nervura-ouro/40" : "border-nervura-borda"}`}>
@@ -136,7 +166,7 @@ export default function ReviewsAdminPage() {
             </div>
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

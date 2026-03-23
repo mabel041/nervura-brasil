@@ -13,7 +13,9 @@
       "Bash(npm run:*)",
       "Bash(where npm:*)",
       "mcp__Claude_Preview__preview_start",
-      "Bash(grep -n \"RodapeSociais\" app/\\\\\\(store\\\\\\)/page.tsx app/\\\\\\(store\\\\\\)/catalogo/page.tsx app/\\\\\\(store\\\\\\)/produto/[slug]/page.tsx app/\\\\\\(store\\\\\\)/copa-2026/page.tsx)"
+      "Bash(grep -n \"RodapeSociais\" app/\\\\\\(store\\\\\\)/page.tsx app/\\\\\\(store\\\\\\)/catalogo/page.tsx app/\\\\\\(store\\\\\\)/produto/[slug]/page.tsx app/\\\\\\(store\\\\\\)/copa-2026/page.tsx)",
+      "Bash(node -e \":*)",
+      "Bash(curl -s http://localhost:3000/api/admin/reviews)"
     ]
   }
 }
