@@ -59,12 +59,24 @@ export default function ReviewsAdminPage() {
   useEffect(() => { carregar(); }, []);
 
   async function aprovar(id: string, aprovado: boolean) {
-    await fetch(`/api/admin/reviews/${id}`, {
+    // Atualiza estado local imediatamente (sem re-carregar tudo)
+    setReviews(prev => prev.map(r => r.id === id ? { ...r, aprovado } : r));
+
+    const res = await fetch(`/api/admin/reviews/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ aprovado }),
     });
-    carregar();
+
+    if (!res.ok) {
+      // Se falhar, reverte o estado e recarrega
+      alert("Erro ao salvar. Recarregando...");
+      carregar();
+      return;
+    }
+
+    // Muda para aba "todos" para o usuário ver a review no novo estado
+    if (aprovado) setFiltro("aprovados");
   }
 
   async function excluir(id: string) {
