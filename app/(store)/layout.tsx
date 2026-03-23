@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Header } from "@/components/loja/Header";
 import { BannerPromocao } from "@/components/loja/BannerPromocao";
-import { BotaoWhatsApp } from "@/components/loja/BotaoWhatsApp";
 import { PixelProvider } from "@/components/PixelProvider";
 import { BarraPagamentos } from "@/components/loja/BarraPagamentos";
 import { RodapeSociais } from "@/components/loja/RodapeSociais";
@@ -36,7 +35,6 @@ export default async function StoreLayout({ children }: { children: React.ReactN
         facebookUrl={config?.facebookUrl ?? undefined}
         whatsappNumero={config?.whatsappNumero ?? undefined}
       />
-      <BotaoWhatsApp />
       <ChatWidget />
     </>
   );
