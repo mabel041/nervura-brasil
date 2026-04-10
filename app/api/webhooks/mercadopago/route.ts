@@ -9,22 +9,30 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get("x-signature") ?? "";
   const requestId = req.headers.get("x-request-id") ?? "";
 
-  // Validar assinatura HMAC
-  if (process.env.MP_WEBHOOK_SECRET) {
-    const [tsPart, v1Part] = signature.split(",");
-    const ts = tsPart?.split("=")[1] ?? "";
-    const v1 = v1Part?.split("=")[1] ?? "";
+  // Validar assinatura HMAC — obrigatório
+  const webhookSecret = process.env.MP_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error("MP_WEBHOOK_SECRET não configurado — webhook rejeitado");
+    return NextResponse.json({ error: "Configuração inválida" }, { status: 500 });
+  }
 
-    const dataId = JSON.parse(body)?.data?.id ?? "";
-    const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
-    const expectedSig = crypto
-      .createHmac("sha256", process.env.MP_WEBHOOK_SECRET)
-      .update(manifest)
-      .digest("hex");
+  const [tsPart, v1Part] = signature.split(",");
+  const ts = tsPart?.split("=")[1] ?? "";
+  const v1 = v1Part?.split("=")[1] ?? "";
 
-    if (v1 !== expectedSig) {
-      return NextResponse.json({ error: "Assinatura inválida" }, { status: 401 });
-    }
+  if (!ts || !v1) {
+    return NextResponse.json({ error: "Assinatura ausente" }, { status: 401 });
+  }
+
+  const dataId = JSON.parse(body)?.data?.id ?? "";
+  const manifest = `id:${dataId};request-id:${requestId};ts:${ts};`;
+  const expectedSig = crypto
+    .createHmac("sha256", webhookSecret)
+    .update(manifest)
+    .digest("hex");
+
+  if (v1 !== expectedSig) {
+    return NextResponse.json({ error: "Assinatura inválida" }, { status: 401 });
   }
 
   const data = JSON.parse(body);
