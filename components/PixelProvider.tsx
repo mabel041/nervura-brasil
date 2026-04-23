@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -15,12 +15,63 @@ declare global {
   }
 }
 
-export function trackEvent(event: string, data?: Record<string, unknown>) {
-  // Meta Pixel
+interface PixelEventOptions {
+  eventId?: string;
+}
+
+interface BrowserMetaData {
+  eventSourceUrl?: string;
+  fbp?: string;
+  fbc?: string;
+}
+
+function getCookie(name: string) {
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
+function ensureMetaClickCookie() {
+  if (typeof window === "undefined" || typeof document === "undefined") return undefined;
+
+  const fbclid = new URLSearchParams(window.location.search).get("fbclid");
+  if (!fbclid) return getCookie("_fbc");
+
+  const existing = getCookie("_fbc");
+  if (existing) return existing;
+
+  const fbc = `fb.1.${Date.now()}.${fbclid}`;
+  document.cookie = `_fbc=${encodeURIComponent(fbc)}; path=/; max-age=7776000; SameSite=Lax`;
+  return fbc;
+}
+
+export function createMetaEventId(prefix: string) {
+  return `${prefix}:${Date.now()}:${Math.random().toString(36).slice(2, 10)}`;
+}
+
+export function getMetaBrowserData(): BrowserMetaData {
+  if (typeof window === "undefined") return {};
+
+  return {
+    eventSourceUrl: window.location.href,
+    fbp: getCookie("_fbp"),
+    fbc: ensureMetaClickCookie(),
+  };
+}
+
+export function trackEvent(
+  event: string,
+  data?: Record<string, unknown>,
+  options?: PixelEventOptions
+) {
   if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", event, data);
+    if (options?.eventId) {
+      window.fbq("track", event, data, { eventID: options.eventId });
+    } else {
+      window.fbq("track", event, data);
+    }
   }
-  // TikTok Pixel
+
   if (typeof window !== "undefined" && window.ttq) {
     window.ttq.track(event, data);
   }
@@ -39,10 +90,11 @@ export function PixelProvider({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const firstPageViewRef = useRef(true);
 
-  // Injetar scripts na montagem
   useEffect(() => {
-    // Google Analytics 4 + Google Ads (compartilham o gtag)
+    ensureMetaClickCookie();
+
     const gaId = googleAnalyticsId;
     const adsId = googleAdsId;
     if ((gaId || adsId) && !window.gtag) {
@@ -63,7 +115,6 @@ export function PixelProvider({
       document.head.appendChild(inlineScript);
     }
 
-    // Meta Pixel
     if (metaPixelId && !window.fbq) {
       const script = document.createElement("script");
       script.innerHTML = `
@@ -81,7 +132,6 @@ export function PixelProvider({
       document.head.appendChild(script);
     }
 
-    // TikTok Pixel
     if (tiktokPixelId && !window.ttq) {
       const script = document.createElement("script");
       script.innerHTML = `
@@ -95,8 +145,12 @@ export function PixelProvider({
     }
   }, [metaPixelId, tiktokPixelId, googleAnalyticsId, googleAdsId]);
 
-  // PageView em cada mudança de rota
   useEffect(() => {
+    if (firstPageViewRef.current) {
+      firstPageViewRef.current = false;
+      return;
+    }
+
     trackEvent("PageView");
   }, [pathname, searchParams]);
 

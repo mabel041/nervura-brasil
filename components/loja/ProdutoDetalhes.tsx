@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingBag, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useCarrinho } from "@/store/carrinho";
@@ -70,6 +70,17 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
   const mostrarVideo = imagemSelecionada === -1 && produto.video;
   const imagem = galeriaAtiva[imagemSelecionada] ?? galeriaAtiva[0];
 
+  useEffect(() => {
+    trackEvent("ViewContent", {
+      content_ids: [produto.id],
+      contents: [{ id: produto.id, quantity: 1, item_price: precoAtual }],
+      content_name: produto.nome,
+      content_type: "product",
+      currency: "BRL",
+      value: precoAtual,
+    });
+  }, [produto.id, produto.nome, precoAtual]);
+
   const handleAdicionarCarrinho = () => {
     if (!corSelecionada || !tamanhoSelecionado) return;
     adicionarItem({
@@ -82,7 +93,14 @@ export function ProdutoDetalhes({ produto, relacionados }: Props) {
       tamanho: tamanhoSelecionado,
       quantidade: 1,
     });
-    trackEvent("AddToCart", { content_name: produto.nome, value: precoAtual, currency: "BRL" });
+    trackEvent("AddToCart", {
+      content_ids: [produto.id],
+      contents: [{ id: produto.id, quantity: 1, item_price: precoAtual }],
+      content_name: produto.nome,
+      content_type: "product",
+      currency: "BRL",
+      value: precoAtual,
+    });
     setAdicionado(true);
     setTimeout(() => setAdicionado(false), 2000);
   };

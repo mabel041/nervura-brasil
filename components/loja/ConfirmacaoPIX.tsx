@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Copy, Loader2, CheckCircle } from "lucide-react";
 import { useCarrinho } from "@/store/carrinho";
-import { trackEvent } from "@/components/PixelProvider";
 
 interface Props {
   pedidoId: string;
@@ -15,7 +14,7 @@ interface Props {
 
 export function ConfirmacaoPIX({ pedidoId, qrCodeBase64, copiaCola }: Props) {
   const router = useRouter();
-  const { limpar, total } = useCarrinho();
+  const { limpar } = useCarrinho();
   const [copiado, setCopiado] = useState(false);
 
   useEffect(() => {
@@ -29,13 +28,12 @@ export function ConfirmacaoPIX({ pedidoId, qrCodeBase64, copiaCola }: Props) {
         const data = await res.json();
         if (data.mpStatus === "approved") {
           clearInterval(interval);
-          trackEvent("Purchase", { value: total(), currency: "BRL" });
           router.refresh();
         }
       } catch { /* ignore */ }
     }, 3000);
     return () => clearInterval(interval);
-  }, [pedidoId, total, router]);
+  }, [pedidoId, router]);
 
   const copiar = () => {
     navigator.clipboard.writeText(copiaCola);

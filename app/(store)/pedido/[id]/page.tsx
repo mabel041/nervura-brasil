@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatDate, STATUS_LABELS } from "@/lib/utils";
 import { ConfirmacaoPIX } from "@/components/loja/ConfirmacaoPIX";
 import { GoogleAdsConversao } from "@/components/loja/GoogleAdsConversao";
+import { MetaPurchaseTracker } from "@/components/loja/MetaPurchaseTracker";
 import { CheckCircle, Package } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -31,6 +32,17 @@ export default async function PedidoPage({ params }: { params: { id: string } })
           conversionId={config.googleAdsConversionId}
           transactionId={pedido.numero}
           valor={pedido.total}
+        />
+      )}
+      {pedidoPago && (
+        <MetaPurchaseTracker
+          orderNumber={pedido.numero}
+          value={pedido.total}
+          items={pedido.itens.map((item) => ({
+            id: item.produtoId,
+            quantity: item.quantidade,
+            item_price: item.precoUnit,
+          }))}
         />
       )}
       <div className="max-w-2xl mx-auto">

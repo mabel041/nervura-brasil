@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { payment as mpPayment } from "@/lib/mercadopago";
 import { prisma } from "@/lib/prisma";
+import { mapItemsToMetaContents, sendMetaEvent } from "@/lib/meta";
 import { enviarEmailConfirmacao } from "@/lib/resend";
 import crypto from "crypto";
 
@@ -50,6 +51,7 @@ export async function POST(req: NextRequest) {
       where: { mpPaymentId: paymentId },
       include: { itens: { include: { produto: true } } },
     });
+    const config = await prisma.configuracao.findUnique({ where: { id: "config" } });
 
     if (!pedido) {
       console.warn(`Pedido não encontrado para mpPaymentId: ${paymentId}`);
@@ -72,6 +74,40 @@ export async function POST(req: NextRequest) {
     });
 
     if (mpData.status === "approved" && pedido.status !== "pago") {
+      await sendMetaEvent({
+        pixelId: config?.metaPixelId,
+        eventName: "Purchase",
+        eventId: `purchase:${pedido.numero}`,
+        eventSourceUrl: process.env.NEXTAUTH_URL
+          ? `${process.env.NEXTAUTH_URL}/pedido/${pedido.id}`
+          : undefined,
+        userData: {
+          email: pedido.emailCliente,
+          phone: pedido.telefone,
+          cpf: pedido.cpf,
+          city: (pedido.endereco as { cidade?: string } | null)?.cidade,
+          state: (pedido.endereco as { estado?: string } | null)?.estado,
+          zip: (pedido.endereco as { cep?: string } | null)?.cep,
+          country: "BR",
+          externalId: pedido.clienteId ?? pedido.id,
+        },
+        customData: {
+          content_ids: pedido.itens.map((item) => item.produtoId),
+          contents: mapItemsToMetaContents(
+            pedido.itens.map((item) => ({
+              produtoId: item.produtoId,
+              quantidade: item.quantidade,
+              precoUnit: item.precoUnit,
+            }))
+          ),
+          content_type: "product",
+          currency: "BRL",
+          num_items: pedido.itens.reduce((acc, item) => acc + item.quantidade, 0),
+          order_id: pedido.numero,
+          value: pedido.total,
+        },
+      }).catch(console.error);
+
       await enviarEmailConfirmacao({
         to: pedido.emailCliente,
         nomeCliente: pedido.nomeCliente,

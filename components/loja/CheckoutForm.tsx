@@ -9,7 +9,7 @@ import { CheckCircle, CreditCard, Smartphone, Loader2, Copy, Truck } from "lucid
 import { useCarrinho } from "@/store/carrinho";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/validacoes";
 import { formatCurrency } from "@/lib/utils";
-import { trackEvent } from "@/components/PixelProvider";
+import { createMetaEventId, getMetaBrowserData, trackEvent } from "@/components/PixelProvider";
 
 declare global {
   interface Window {
@@ -143,7 +143,6 @@ export function CheckoutForm() {
       if (data.mpStatus === "approved") {
         clearInterval(interval);
         limpar();
-        trackEvent("Purchase", { value: total(), currency: "BRL" });
         router.push(`/pedido/${pixData.pedidoId}`);
       }
     }, 3000);
@@ -167,6 +166,15 @@ export function CheckoutForm() {
 
     const freteValor = freteSelecionado?.preco ?? 0;
     const totalComFrete = total() + freteValor;
+    const metaContents = itens.map((item) => ({
+      id: item.produtoId,
+      quantity: item.quantidade,
+      item_price: item.preco,
+    }));
+    const metaContentIds = itens.map((item) => item.produtoId);
+    const metaNumItems = itens.reduce((acc, item) => acc + item.quantidade, 0);
+    const initiateCheckoutEventId = createMetaEventId("initiate_checkout");
+    const browserData = getMetaBrowserData();
 
     const base = {
       itens: itens.map((i) => ({
@@ -183,6 +191,10 @@ export function CheckoutForm() {
       freteValor,
       freteServico: freteSelecionado?.nome ?? null,
       fretePrazo: freteSelecionado?.prazo ?? null,
+      meta: {
+        initiateCheckoutEventId,
+        browserData,
+      },
       nome: form.nome,
       email: form.email,
       telefone: form.telefone,
@@ -190,7 +202,18 @@ export function CheckoutForm() {
       endereco,
     };
 
-    trackEvent("InitiateCheckout", { value: total(), currency: "BRL" });
+    trackEvent(
+      "InitiateCheckout",
+      {
+        content_ids: metaContentIds,
+        contents: metaContents,
+        content_type: "product",
+        currency: "BRL",
+        num_items: metaNumItems,
+        value: totalComFrete,
+      },
+      { eventId: initiateCheckoutEventId }
+    );
 
     try {
       if (form.formaPagamento === "pix") {
@@ -212,7 +235,6 @@ export function CheckoutForm() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error ?? "Erro no pagamento");
         limpar();
-        trackEvent("Purchase", { value: total(), currency: "BRL" });
         router.push(`/pedido/${data.pedidoId}`);
       }
     } catch (err) {
