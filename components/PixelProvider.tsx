@@ -27,16 +27,18 @@ export function trackEvent(event: string, data?: Record<string, unknown>) {
 }
 
 export function PixelProvider({
+  metaPixelId,
+  tiktokPixelId,
   googleAnalyticsId,
   googleAdsId,
 }: {
+  metaPixelId?: string | null;
+  tiktokPixelId?: string | null;
   googleAnalyticsId?: string | null;
   googleAdsId?: string | null;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-  const tiktokPixelId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID;
 
   // Injetar scripts na montagem
   useEffect(() => {

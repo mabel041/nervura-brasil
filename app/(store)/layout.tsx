@@ -17,6 +17,8 @@ export default async function StoreLayout({ children }: { children: React.ReactN
     <>
       <Suspense>
         <PixelProvider
+          metaPixelId={config?.metaPixelId}
+          tiktokPixelId={config?.tikTokPixelId}
           googleAnalyticsId={config?.googleAnalyticsId}
           googleAdsId={config?.googleAdsId}
         />
