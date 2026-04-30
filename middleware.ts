@@ -1,23 +1,19 @@
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
+export default function middleware(req: Request & { nextUrl: URL; cookies: { has(name: string): boolean } }) {
   const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
   const isLoginPage = req.nextUrl.pathname === "/admin/login";
-  const isAuthenticated = !!req.auth;
+  const hasSessionCookie =
+    req.cookies.has("authjs.session-token") || req.cookies.has("__Secure-authjs.session-token");
 
-  if (isAdminRoute && !isLoginPage && !isAuthenticated) {
+  if (isAdminRoute && !isLoginPage && !hasSessionCookie) {
     const loginUrl = new URL("/admin/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    loginUrl.searchParams.set("callbackUrl", `${req.nextUrl.pathname}${req.nextUrl.search}`);
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isLoginPage && isAuthenticated) {
-    return NextResponse.redirect(new URL("/admin", req.url));
-  }
-
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/admin/:path*"],

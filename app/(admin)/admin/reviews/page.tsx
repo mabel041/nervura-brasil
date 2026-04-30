@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Check, X, Trash2, MessageSquare } from "lucide-react";
+import { Star, Check, X, Trash2, MessageSquare, RefreshCw } from "lucide-react";
 
 interface Review {
   id: string;
@@ -19,7 +19,11 @@ function Estrelas({ nota }: { nota: number }) {
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} size={14} className={i <= nota ? "fill-nervura-ouro text-nervura-ouro" : "fill-gray-200 text-gray-200"} />
+        <Star
+          key={i}
+          size={14}
+          className={i <= nota ? "fill-nervura-ouro text-nervura-ouro" : "fill-gray-200 text-gray-200"}
+        />
       ))}
     </div>
   );
@@ -28,39 +32,76 @@ function Estrelas({ nota }: { nota: number }) {
 export default function ReviewsAdminPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filtro, setFiltro] = useState<"todos" | "pendentes" | "aprovados">("pendentes");
-
   const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [atualizando, setAtualizando] = useState(false);
+  const [ultimaAtualizacao, setUltimaAtualizacao] = useState<string | null>(null);
 
-  async function carregar() {
-    setCarregando(true);
+  async function carregar({ silencioso = false }: { silencioso?: boolean } = {}) {
+    if (silencioso) {
+      setAtualizando(true);
+    } else {
+      setCarregando(true);
+    }
     setErro(null);
+
     try {
-      const res = await fetch("/api/admin/reviews");
+      const res = await fetch("/api/admin/reviews", {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      });
+
       if (!res.ok) {
         setErro(`Erro HTTP ${res.status}: ${res.statusText}`);
         return;
       }
+
       const contentType = res.headers.get("content-type");
       if (!contentType?.includes("application/json")) {
-        setErro("Sessão expirada. Faça login novamente.");
+        setErro("SessÃ£o expirada. FaÃ§a login novamente.");
         window.location.href = "/admin/login";
         return;
       }
+
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
+      setUltimaAtualizacao(new Date().toLocaleTimeString("pt-BR"));
     } catch (e) {
       setErro(`Erro ao carregar: ${e}`);
     } finally {
-      setCarregando(false);
+      if (silencioso) {
+        setAtualizando(false);
+      } else {
+        setCarregando(false);
+      }
     }
   }
 
-  useEffect(() => { carregar(); }, []);
+  useEffect(() => {
+    carregar();
+
+    const onFocus = () => carregar({ silencioso: true });
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        carregar({ silencioso: true });
+      }
+    };
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    const interval = window.setInterval(() => carregar({ silencioso: true }), 30000);
+
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.clearInterval(interval);
+    };
+  }, []);
 
   async function aprovar(id: string, aprovado: boolean) {
-    // Atualiza estado local imediatamente (sem re-carregar tudo)
-    setReviews(prev => prev.map(r => r.id === id ? { ...r, aprovado } : r));
+    setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, aprovado } : r)));
 
     const res = await fetch(`/api/admin/reviews/${id}`, {
       method: "PUT",
@@ -69,18 +110,16 @@ export default function ReviewsAdminPage() {
     });
 
     if (!res.ok) {
-      // Se falhar, reverte o estado e recarrega
       alert("Erro ao salvar. Recarregando...");
       carregar();
       return;
     }
 
-    // Muda para aba "todos" para o usuário ver a review no novo estado
     if (aprovado) setFiltro("aprovados");
   }
 
   async function excluir(id: string) {
-    if (!confirm("Excluir esta avaliação?")) return;
+    if (!confirm("Excluir esta avaliaÃ§Ã£o?")) return;
     await fetch(`/api/admin/reviews/${id}`, { method: "DELETE" });
     carregar();
   }
@@ -97,24 +136,38 @@ export default function ReviewsAdminPage() {
     <div className="p-6 space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl text-nervura-texto-principal">Avaliações</h1>
-          <p className="text-nervura-texto-muted text-sm mt-1">Modere as avaliações dos clientes</p>
+          <h1 className="font-serif text-3xl text-nervura-texto-principal">AvaliaÃ§Ãµes</h1>
+          <p className="text-nervura-texto-muted text-sm mt-1">Modere as avaliaÃ§Ãµes dos clientes</p>
+          {ultimaAtualizacao && (
+            <p className="text-xs text-nervura-texto-muted mt-1">Atualizado Ã s {ultimaAtualizacao}</p>
+          )}
         </div>
-        {pendentes > 0 && (
-          <span className="bg-nervura-ouro text-nervura-verde text-sm font-bold px-3 py-1 rounded-full">
-            {pendentes} pendente{pendentes !== 1 ? "s" : ""}
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {pendentes > 0 && (
+            <span className="bg-nervura-ouro text-nervura-verde text-sm font-bold px-3 py-1 rounded-full">
+              {pendentes} pendente{pendentes !== 1 ? "s" : ""}
+            </span>
+          )}
+          <button
+            onClick={() => carregar({ silencioso: true })}
+            className="inline-flex items-center gap-2 rounded-lg border border-nervura-borda bg-white px-3 py-2 text-sm text-nervura-texto-principal transition-colors hover:bg-nervura-creme disabled:opacity-60"
+            disabled={atualizando}
+          >
+            <RefreshCw size={14} className={atualizando ? "animate-spin" : ""} />
+            Atualizar
+          </button>
+        </div>
       </div>
 
-      {/* Filtros */}
       <div className="flex gap-2">
         {(["pendentes", "aprovados", "todos"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFiltro(f)}
             className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
-              filtro === f ? "bg-nervura-verde text-nervura-creme" : "bg-white border border-nervura-borda text-nervura-texto-muted hover:bg-nervura-creme"
+              filtro === f
+                ? "bg-nervura-verde text-nervura-creme"
+                : "bg-white border border-nervura-borda text-nervura-texto-muted hover:bg-nervura-creme"
             }`}
           >
             {f} {f === "pendentes" && pendentes > 0 ? `(${pendentes})` : ""}
@@ -122,31 +175,45 @@ export default function ReviewsAdminPage() {
         ))}
       </div>
 
-      {/* Loading / Erro */}
       {carregando && (
-        <div className="text-center py-16 text-nervura-texto-muted">Carregando avaliações...</div>
+        <div className="text-center py-16 text-nervura-texto-muted">Carregando avaliaÃ§Ãµes...</div>
       )}
       {erro && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">{erro}</div>
       )}
 
-      {/* Lista */}
       {!carregando && !erro && filtrados.length === 0 ? (
         <div className="text-center py-16 text-nervura-texto-muted bg-white rounded-xl border border-nervura-borda">
           <MessageSquare size={40} className="mx-auto mb-3 opacity-30" />
-          <p>Nenhuma avaliação {filtro === "pendentes" ? "pendente" : filtro === "aprovados" ? "aprovada" : ""}</p>
+          <p>
+            Nenhuma avaliaÃ§Ã£o{" "}
+            {filtro === "pendentes" ? "pendente" : filtro === "aprovados" ? "aprovada" : ""}
+          </p>
         </div>
       ) : !carregando && !erro ? (
         <div className="space-y-3">
           {filtrados.map((r) => (
-            <div key={r.id} className={`bg-white border rounded-xl p-5 space-y-3 ${!r.aprovado ? "border-nervura-ouro/40" : "border-nervura-borda"}`}>
+            <div
+              key={r.id}
+              className={`bg-white border rounded-xl p-5 space-y-3 ${
+                !r.aprovado ? "border-nervura-ouro/40" : "border-nervura-borda"
+              }`}
+            >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-nervura-texto-principal">{r.nome}</p>
                     <span className="text-xs text-nervura-texto-muted">{r.email}</span>
-                    {!r.aprovado && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">Pendente</span>}
-                    {r.aprovado && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Publicado</span>}
+                    {!r.aprovado && (
+                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
+                        Pendente
+                      </span>
+                    )}
+                    {r.aprovado && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                        Publicado
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <Estrelas nota={r.nota} />
@@ -158,20 +225,31 @@ export default function ReviewsAdminPage() {
                 </p>
               </div>
 
-              {r.titulo && <p className="font-medium text-sm text-nervura-texto-principal">"{r.titulo}"</p>}
+              {r.titulo && (
+                <p className="font-medium text-sm text-nervura-texto-principal">"{r.titulo}"</p>
+              )}
               <p className="text-sm text-nervura-texto-secundario leading-relaxed">{r.comentario}</p>
 
               <div className="flex gap-2 pt-1">
                 {!r.aprovado ? (
-                  <button onClick={() => aprovar(r.id, true)} className="flex items-center gap-1.5 bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                  <button
+                    onClick={() => aprovar(r.id, true)}
+                    className="flex items-center gap-1.5 bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-700 transition-colors"
+                  >
                     <Check size={14} /> Aprovar
                   </button>
                 ) : (
-                  <button onClick={() => aprovar(r.id, false)} className="flex items-center gap-1.5 border border-gray-300 text-gray-600 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                  <button
+                    onClick={() => aprovar(r.id, false)}
+                    className="flex items-center gap-1.5 border border-gray-300 text-gray-600 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                  >
                     <X size={14} /> Despublicar
                   </button>
                 )}
-                <button onClick={() => excluir(r.id)} className="flex items-center gap-1.5 border border-red-200 text-red-500 px-4 py-1.5 rounded-lg text-sm hover:bg-red-50 transition-colors">
+                <button
+                  onClick={() => excluir(r.id)}
+                  className="flex items-center gap-1.5 border border-red-200 text-red-500 px-4 py-1.5 rounded-lg text-sm hover:bg-red-50 transition-colors"
+                >
                   <Trash2 size={14} /> Excluir
                 </button>
               </div>
