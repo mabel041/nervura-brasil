@@ -32,3 +32,43 @@ Este arquivo registra, por lote, o que foi alterado e enviado para deploy.
 
 ### Observacoes
 - `.claude/settings.local.json` ficou fora do deploy por ser configuracao local da maquina e nao codigo do site.
+
+## 2026-04-30
+
+### Lote
+- Redesign visual da home inspirado no Stitch
+- Atualizacao da moldura visual da vitrine da loja
+- Export local dos assets de referencia do Stitch para implementacao
+
+### Arquivos incluidos
+- `app/(store)/page.tsx`
+- `app/globals.css`
+- `components/loja/BannerPromocao.tsx`
+- `components/loja/BarraPagamentos.tsx`
+- `components/loja/CardProduto.tsx`
+- `components/loja/ContadorCopa.tsx`
+- `components/loja/Header.tsx`
+- `components/loja/RodapeSociais.tsx`
+- `stich-project/exports/17366138114382484145/828f3a1798c741ef9cc916240eb61040/screen.html`
+- `stich-project/exports/17366138114382484145/828f3a1798c741ef9cc916240eb61040/screen.png`
+- `stich-project/exports/17366138114382484145/828f3a1798c741ef9cc916240eb61040/metadata.json`
+- `stich-project/exports/17366138114382484145/b0a389cdcaa345b4a31ccd99ba3dec25/screen.png`
+- `stich-project/exports/17366138114382484145/b0a389cdcaa345b4a31ccd99ba3dec25/metadata.json`
+- `stich-project/exports/17366138114382484145/b0a389cdcaa345b4a31ccd99ba3dec25/list-screens-response.txt`
+- `stich-project/stitch-main.js`
+- `stich-project/stitch-aux.js`
+
+### O que foi alterado
+- Home reestruturada com hero editorial, hierarquia tipografica mais forte e composicao inspirada no material do Stitch.
+- Secoes de colecao, destaque, contagem da Copa e historia reorganizadas para uma leitura mais premium e menos cara de template.
+- Header, banner promocional, cards de produto, contador, barra de pagamentos e rodape receberam novo tratamento visual para alinhar a vitrine inteira.
+- Estrutura de negocio foi preservada: catalogo, links, dados vindos do banco e logica de compra nao foram alterados neste lote.
+- Assets e metadados do Stitch foram exportados localmente para servir de referencia rastreavel na implementacao.
+
+### Validacao executada
+- `npx tsc --noEmit`
+- `npm run build`
+
+### Observacoes
+- A pagina de produto, carrinho, checkout e order bump continuam com a estrutura atual; este lote altera apenas a home e os componentes compartilhados de moldura visual.
+- O screen Stitch solicitado por ID nao expunha `htmlUrl`; por isso foi mantido tambem um screen alternativo do mesmo projeto que disponibiliza HTML para referencia de implementacao.

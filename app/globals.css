@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --radius: 0.5rem;
+    --radius: 0rem;
   }
 
   * {
@@ -12,36 +12,70 @@
   }
 
   body {
-    @apply bg-nervura-creme text-nervura-texto-principal font-sans antialiased;
+    @apply bg-[#fcf9f8] text-nervura-texto-principal font-sans antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-nervura-verde text-nervura-creme font-sans font-medium px-6 py-3 rounded transition-colors duration-200 hover:bg-nervura-verde-medio active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center border border-nervura-ouro bg-nervura-ouro px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-nervura-texto-principal transition-colors duration-200 hover:bg-transparent hover:text-nervura-verde active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-outline {
-    @apply border border-nervura-verde text-nervura-verde font-sans font-medium px-6 py-3 rounded transition-colors duration-200 hover:bg-nervura-verde hover:text-nervura-creme;
+    @apply inline-flex items-center justify-center border border-nervura-verde/30 px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-nervura-verde transition-colors duration-200 hover:border-nervura-verde hover:bg-nervura-verde hover:text-nervura-creme;
   }
 
   .card-produto {
-    @apply bg-nervura-branco-quente border border-nervura-borda rounded-lg overflow-hidden transition-shadow duration-200 hover:shadow-md;
+    @apply block overflow-hidden border-0 bg-transparent transition-transform duration-300;
   }
 
   .input-field {
-    @apply w-full border border-nervura-borda rounded-md px-3 py-2 bg-white text-nervura-texto-principal placeholder:text-nervura-texto-muted focus:outline-none focus:ring-2 focus:ring-nervura-verde focus:border-transparent transition-all duration-200;
+    @apply w-full border-0 border-b border-nervura-verde/20 bg-transparent px-0 py-3 text-nervura-texto-principal placeholder:text-nervura-texto-muted transition-colors duration-200 focus:border-nervura-ouro focus:outline-none focus:ring-0;
   }
 
   .label {
-    @apply text-sm font-medium text-nervura-texto-secundario mb-1 block;
+    @apply mb-1 block text-sm font-medium text-nervura-texto-secundario;
   }
 
   .badge-status {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .editorial-shell {
+    @apply mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-kicker {
+    @apply font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-nervura-texto-muted;
+  }
+
+  .rise-in {
+    animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .rise-in-delayed {
+    animation: rise-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 120ms;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

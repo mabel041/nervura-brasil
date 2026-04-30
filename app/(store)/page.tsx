@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
 import { CardProduto } from "@/components/loja/CardProduto";
 import { ContadorCopa } from "@/components/loja/ContadorCopa";
 
@@ -15,10 +16,6 @@ async function getProdutosDestaque() {
   });
 }
 
-async function getConfiguracoes() {
-  return prisma.configuracao.findUnique({ where: { id: "config" } });
-}
-
 async function getColecoes() {
   return prisma.colecao.findMany({ where: { ativo: true }, orderBy: { ordem: "asc" } });
 }
@@ -28,176 +25,229 @@ async function getAparencia() {
 }
 
 export default async function HomePage() {
-  const [produtos, config, colecoes, aparencia] = await Promise.all([
+  const [produtos, colecoes, aparencia] = await Promise.all([
     getProdutosDestaque(),
-    getConfiguracoes(),
     getColecoes(),
     getAparencia(),
   ]);
 
+  const heroImage =
+    aparencia?.homeHeroImagem ??
+    produtos[0]?.imagens?.[0] ??
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600";
+
+  const historiaImagem =
+    aparencia?.sobreImagem ??
+    produtos[1]?.imagens?.[0] ??
+    heroImage;
+
+  const colecaoPrincipal = colecoes.find((colecao) => colecao.href === "/copa-2026");
+  const colecoesSecundarias = colecoes.filter((colecao) => colecao.href !== "/copa-2026").slice(0, 2);
+  const imagensHistoria = [
+    historiaImagem,
+    produtos[0]?.imagens?.[0] ?? heroImage,
+    produtos[2]?.imagens?.[0] ?? heroImage,
+  ];
+
   return (
     <>
-      {/* Hero */}
-      <section className="relative min-h-[85vh] bg-nervura-verde flex items-center overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <Image
-            src={aparencia?.homeHeroImagem ?? "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920"}
-            alt="Background"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <p className="text-nervura-ouro font-sans text-sm uppercase tracking-[0.3em] mb-4">
-            Moda Feminina Brasileira
-          </p>
-          <h1 className="font-serif text-5xl sm:text-7xl font-light text-nervura-creme mb-6 leading-tight">
-            {aparencia?.homeHeroTitulo ? (
-              aparencia.homeHeroTitulo
-            ) : (
-              <>
-                Nervura<br />
-                <span className="font-bold">Brasil</span>
-              </>
-            )}
-          </h1>
-          <p className="text-nervura-texto-muted text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
-            {aparencia?.homeHeroSubtitulo ?? "Peças exclusivas que celebram a força, elegância e identidade da mulher brasileira."}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href={aparencia?.homeHeroBotaoLink ?? "/catalogo"}
-              className="btn-primary text-base px-8 py-4"
-            >
-              {aparencia?.homeHeroBotaoTexto ?? "Ver Catálogo"}
-            </Link>
-            <Link href="/copa-2026" className="btn-outline border-nervura-ouro text-nervura-ouro hover:bg-nervura-ouro hover:text-nervura-verde text-base px-8 py-4">
-              Coleção Copa 2026
-            </Link>
+      <section className="relative overflow-hidden border-b border-black/5 bg-[#f8f3eb]">
+        <div className="grid min-h-[calc(100svh-10rem)] grid-cols-1 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.18fr)]">
+          <div className="relative flex items-center bg-nervura-verde px-6 py-16 sm:px-10 lg:px-14 xl:px-20">
+            <div className="rise-in max-w-xl">
+              <p className="mb-4 font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-nervura-ouro/90">
+                Nervura Brasil
+              </p>
+              <h1 className="font-serif text-5xl font-light leading-[0.92] tracking-[-0.04em] text-[#f6efe1] sm:text-6xl lg:text-7xl">
+                {aparencia?.homeHeroTitulo ?? "Moda com Alma Brasileira"}
+              </h1>
+              <p className="mt-6 max-w-md text-base leading-7 text-[#d8d1c0] sm:text-lg">
+                {aparencia?.homeHeroSubtitulo ??
+                  "Pecas de presenca calma, cor precisa e identidade brasileira para uma vitrine mais autoral."}
+              </p>
+              <div className="rise-in-delayed mt-10 flex flex-col gap-3 sm:flex-row">
+                <Link href={aparencia?.homeHeroBotaoLink ?? "/catalogo"} className="btn-primary">
+                  {aparencia?.homeHeroBotaoTexto ?? "Explorar Catalogo"}
+                </Link>
+                <Link
+                  href="/copa-2026"
+                  className="btn-outline border-[#d7c28a] text-[#f5e7bf] hover:border-nervura-ouro hover:bg-nervura-ouro hover:text-nervura-texto-principal"
+                >
+                  Ver Colecao Copa
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative min-h-[28rem] lg:min-h-full">
+            <Image
+              src={heroImage}
+              alt="Editorial Nervura Brasil"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 60vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent lg:bg-gradient-to-l lg:from-transparent lg:via-transparent lg:to-black/5" />
           </div>
         </div>
       </section>
 
-      {/* Banner Copa 2026 */}
-      <section className="bg-gradient-to-r from-nervura-verde via-nervura-verde-medio to-nervura-verde py-12 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-nervura-ouro font-sans text-xs uppercase tracking-widest mb-2">
-            Coleção Especial
-          </p>
-          <h2 className="font-serif text-4xl text-nervura-creme mb-4">Copa 2026</h2>
-          <p className="text-nervura-texto-muted mb-6 max-w-lg mx-auto">
-            Vista-se com orgulho. A coleção mais especial do ano chegou.
-          </p>
-          <ContadorCopa />
-          <Link href="/copa-2026" className="inline-block mt-6 bg-nervura-ouro text-nervura-verde font-bold px-8 py-3 rounded transition-opacity hover:opacity-90">
-            Ver Coleção →
+      <section className="editorial-shell py-16 lg:py-20">
+        <div className="mb-8 flex flex-col gap-3 lg:mb-10">
+          <p className="section-kicker">Capitulos da temporada</p>
+          <h2 className="max-w-xl font-serif text-3xl leading-tight tracking-[-0.03em] text-nervura-verde sm:text-4xl">
+            Colecoes com imagem mais forte, menos ruido e leitura mais premium.
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,0.95fr)]">
+          <Link href={colecaoPrincipal?.href ?? "/copa-2026"} className="group relative min-h-[28rem] overflow-hidden bg-[#e9e1d3]">
+            {colecaoPrincipal?.imagem ? (
+              <Image
+                src={colecaoPrincipal.imagem}
+                alt={colecaoPrincipal.nome}
+                fill
+                className="object-cover transition duration-700 group-hover:scale-[1.04] group-hover:grayscale-0"
+                sizes="(max-width: 1024px) 100vw, 58vw"
+              />
+            ) : (
+              <div className="h-full w-full bg-nervura-verde" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+              <p className="mb-3 font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-[#f0dfb5]">
+                Edicao limitada
+              </p>
+              <h3 className="max-w-md font-serif text-4xl leading-none tracking-[-0.03em] text-white sm:text-5xl">
+                {colecaoPrincipal?.nome ?? "Copa 2026"}
+              </h3>
+              <span className="mt-5 inline-block border-b border-white pb-1 font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-white">
+                Ver colecao
+              </span>
+            </div>
           </Link>
-        </div>
-      </section>
 
-      {/* Destaques */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-10">
-          <p className="text-nervura-texto-muted font-sans text-xs uppercase tracking-widest mb-2">
-            Seleção Especial
-          </p>
-          <h2 className="font-serif text-4xl text-nervura-texto-principal">Destaques</h2>
-        </div>
-
-        {produtos.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 lg:gap-6">
-            {produtos.map((p) => (
-              <CardProduto key={p.id} produto={p} />
+          <div className="grid gap-5">
+            {colecoesSecundarias.map((colecao) => (
+              <Link key={colecao.id} href={colecao.href} className="group relative min-h-[13rem] overflow-hidden bg-[#ece4d6]">
+                {colecao.imagem ? (
+                  <Image
+                    src={colecao.imagem}
+                    alt={colecao.nome}
+                    fill
+                    className="object-cover transition duration-700 group-hover:scale-[1.04]"
+                    sizes="(max-width: 1024px) 100vw, 34vw"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-[#d7cfbf]" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                  <p className="mb-2 font-sans text-[10px] font-semibold uppercase tracking-[0.24em] text-[#f0dfb5]">
+                    {colecao.subtitulo || "Curadoria"}
+                  </p>
+                  <h3 className="font-serif text-2xl leading-tight text-white">{colecao.nome}</h3>
+                </div>
+              </Link>
             ))}
           </div>
-        ) : (
-          <p className="text-center text-nervura-texto-muted py-12">
-            Em breve novidades incríveis!
-          </p>
-        )}
-
-        <div className="text-center mt-10">
-          <Link href="/catalogo" className="btn-outline">
-            Ver todos os produtos
-          </Link>
         </div>
       </section>
 
-      {/* Coleções */}
-      {colecoes.length > 0 && (
-        <section className="bg-nervura-creme-escuro py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-10">
-              <h2 className="font-serif text-4xl text-nervura-texto-principal">Nossas Coleções</h2>
+      <section className="border-y border-black/5 bg-[#f2ece2] py-14">
+        <div className="editorial-shell">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+            <div>
+              <p className="section-kicker mb-3">Colecao especial</p>
+              <h2 className="font-serif text-4xl tracking-[-0.03em] text-nervura-verde">Copa 2026</h2>
+              <p className="mt-3 max-w-md text-sm leading-7 text-nervura-texto-secundario sm:text-base">
+                Uma leitura mais limpa da campanha para a vitrine principal, com peso de marca e foco na conversao.
+              </p>
             </div>
-            <div className={`grid grid-cols-1 gap-6 ${colecoes.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
-              {colecoes.map((col) => (
-                <Link key={col.id} href={col.href} className="group relative aspect-[4/5] overflow-hidden rounded-xl">
-                  {col.imagem ? (
-                    <Image
-                      src={col.imagem}
-                      alt={col.nome}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-nervura-verde-medio" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 left-0 p-6 text-white">
-                    <p className="text-xs uppercase tracking-widest mb-1 text-nervura-ouro">
-                      {col.subtitulo}
-                    </p>
-                    <h3 className="font-serif text-2xl">{col.nome}</h3>
-                  </div>
-                </Link>
+            <ContadorCopa />
+            <Link href="/copa-2026" className="btn-outline justify-self-start lg:justify-self-end">
+              Ver Colecao
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f2e8] py-16 lg:py-20">
+        <div className="editorial-shell">
+          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="section-kicker mb-3">Curadoria Nervura</p>
+              <h2 className="font-serif text-3xl tracking-[-0.03em] text-nervura-verde sm:text-4xl">
+                Destaques com mais imagem e menos cara de card.
+              </h2>
+            </div>
+            <Link href="/catalogo" className="font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-nervura-verde transition-colors hover:text-nervura-ouro">
+              Ver todo o catalogo
+            </Link>
+          </div>
+
+          {produtos.length > 0 ? (
+            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+              {produtos.map((p) => (
+                <CardProduto key={p.id} produto={p} />
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* Nossa História */}
-      <section id="nossa-historia" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
-            <Image
-              src={aparencia?.sobreImagem ?? "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800"}
-              alt="Nossa história"
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div>
-            <p className="text-nervura-ouro font-sans text-xs uppercase tracking-widest mb-3">
-              Nossa História
+          ) : (
+            <p className="py-12 text-center text-nervura-texto-muted">
+              Em breve, novas pecas entram nesta selecao.
             </p>
-            <h2 className="font-serif text-4xl lg:text-5xl text-nervura-texto-principal mb-6 leading-tight" style={{ whiteSpace: "pre-line" }}>
+          )}
+        </div>
+      </section>
+
+      <section id="nossa-historia" className="editorial-shell py-16 lg:py-24">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16">
+          <div className="order-2 lg:order-1">
+            <p className="section-kicker mb-4">Nossa historia</p>
+            <h2
+              className="max-w-xl font-serif text-4xl leading-[0.95] tracking-[-0.04em] text-nervura-verde sm:text-5xl"
+              style={{ whiteSpace: "pre-line" }}
+            >
               {aparencia?.sobreTitulo ?? "Feito para a mulher brasileira, com alma brasileira"}
             </h2>
             {aparencia?.sobreDescricao ? (
-              <div className="text-nervura-texto-secundario leading-relaxed mb-8 space-y-4">
+              <div className="mt-6 space-y-5 text-base leading-8 text-nervura-texto-secundario">
                 {aparencia.sobreDescricao.split("\n\n").map((paragrafo, i) => (
                   <p key={i}>{paragrafo}</p>
                 ))}
               </div>
             ) : (
-              <>
-                <p className="text-nervura-texto-secundario leading-relaxed mb-4">
-                  A Nervura Brasil nasceu da vontade de criar roupas que contam histórias. Cada peça é
-                  desenvolvida com atenção aos detalhes, materiais selecionados e um olhar apaixonado
-                  pela cultura brasileira.
+              <div className="mt-6 space-y-5 text-base leading-8 text-nervura-texto-secundario">
+                <p>
+                  A Nervura Brasil nasceu para vestir com presenca, textura e identidade. A proposta aqui deixa essa intencao mais visivel logo no primeiro scroll.
                 </p>
-                <p className="text-nervura-texto-secundario leading-relaxed mb-8">
-                  Do canelado clássico às peças que celebram o futebol brasileiro, somos uma marca
-                  que acredita que moda é expressão, identidade e amor próprio.
+                <p>
+                  Menos bloco, mais hierarquia. Menos ornamento, mais imagem, tipografia e materia. Essa e a direcao que combina melhor com o tamanho atual do catalogo.
                 </p>
-              </>
+              </div>
             )}
-            <Link href="/catalogo" className="btn-primary">
-              {aparencia?.sobreBotaoTexto ?? "Explorar coleções"}
-            </Link>
+            <div className="mt-8">
+              <Link href="/catalogo" className="btn-outline">
+                {aparencia?.sobreBotaoTexto ?? "Explorar colecoes"}
+              </Link>
+            </div>
+          </div>
+
+          <div className="order-1 grid grid-cols-2 gap-4 lg:order-2">
+            <div className="pt-10">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#ebe2d5]">
+                <Image src={imagensHistoria[0]} alt="Imagem editorial Nervura" fill className="object-cover" sizes="(max-width: 1024px) 50vw, 24vw" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#ebe2d5]">
+                <Image src={imagensHistoria[1]} alt="Atelie e colecao" fill className="object-cover grayscale" sizes="(max-width: 1024px) 50vw, 20vw" />
+              </div>
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#ebe2d5]">
+                <Image src={imagensHistoria[2]} alt="Curadoria de pecas" fill className="object-cover" sizes="(max-width: 1024px) 50vw, 20vw" />
+              </div>
+            </div>
           </div>
         </div>
       </section>

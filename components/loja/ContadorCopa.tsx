@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const COPA_DATE = new Date("2026-06-11T20:00:00-03:00"); // Abertura Copa 2026
+const COPA_DATE = new Date("2026-06-11T20:00:00-03:00");
 
 interface Tempo {
   dias: number;
@@ -42,18 +42,18 @@ export function ContadorCopa() {
   if (!montado) return null;
 
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
       {unidades.map((u, i) => (
-        <div key={u.label} className="flex items-center gap-4">
+        <div key={u.label} className="flex items-center gap-3 sm:gap-5">
           <div className="text-center">
-            <div className="bg-nervura-ouro text-nervura-verde font-bold font-mono text-3xl sm:text-4xl w-16 sm:w-20 h-16 sm:h-20 rounded-lg flex items-center justify-center tabular-nums">
+            <div className="flex h-16 w-16 items-center justify-center border border-nervura-verde/15 bg-[#fffaf1] font-sans text-2xl font-semibold tabular-nums text-nervura-verde sm:h-20 sm:w-20 sm:text-3xl">
               {String(u.valor).padStart(2, "0")}
             </div>
-            <span className="text-nervura-texto-muted text-xs mt-1 block">{u.label}</span>
+            <span className="mt-2 block font-sans text-[10px] uppercase tracking-[0.22em] text-nervura-texto-muted">
+              {u.label}
+            </span>
           </div>
-          {i < 3 && (
-            <span className="text-nervura-ouro font-bold text-2xl mb-4">:</span>
-          )}
+          {i < 3 && <span className="mb-5 text-lg font-semibold text-nervura-ouro sm:text-2xl">:</span>}
         </div>
       ))}
     </div>

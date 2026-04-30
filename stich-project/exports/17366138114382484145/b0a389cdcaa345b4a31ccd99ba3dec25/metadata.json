@@ -1,0 +1,15 @@
+﻿{
+    "projectId":  "17366138114382484145",
+    "projectTitle":  "Nervura Brasil Website Redesign",
+    "requestedScreenId":  "b0a389cdcaa345b4a31ccd99ba3dec25",
+    "title":  "Nervura Brasil Home Page Redesign",
+    "promptTitle":  "Title: Nervura Brasil Shopping Cart Page",
+    "prompt":  "Title: Nervura Brasil Shopping Cart Page\nContext: E-commerce shopping cart page for a Brazilian women\u0027s fashion brand focusing on quality and cultural identity.\nDescription of the screen: A clean and sophisticated shopping cart page. The layout features a main section on the left listing the added products (image, name, size, quantity selector, and price) in a minimalist table format with thin separators. On the right, a \u0027Resumo do Pedido\u0027 (Order Summary) sidebar with a light cream background, showing the subtotal, shipping calculation field, and the total price in a bold font. Below the total, a prominent \u0027Finalizar Compra\u0027 button in golden-yellow. The footer and header remain consistent with the homepage design. The interface is spacious, high-end, and easy to navigate.\nPlatform: web\nForm factor: desktop",
+    "screenPath":  "projects/17366138114382484145/screens/b0a389cdcaa345b4a31ccd99ba3dec25",
+    "screenshotUrl":  "https://lh3.googleusercontent.com/aida/ADBb0uh3CVLoOvTOszgDoFiBFsprY2Cv1o7DaI9e_UOTE4vYb6cswqwny9Q9jWoLCdUw_aQccOz25Vxnm5DRtTybz2ptKjM7xB5CJD0wDfTgoh1pbIuKZnd7xVwyZNU7B9ouMu15eq0IG1ueqRqINhuLSh-VOy4b5D46h6RasGWf4VJLOLGIs8pWb3tu6nuN9Z57K3M9Kmoyy7kpbCc-YP1-HXQLyNvS4x6NiHXdPiymPPPSeLEm_iYmZ21kTGAJ",
+    "htmlUrl":  null,
+    "figmaUrl":  null,
+    "generatedBy":  "image_space_edit_agent",
+    "width":  "768",
+    "height":  "1376"
+}

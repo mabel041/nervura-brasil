@@ -29,60 +29,66 @@ export function CardProduto({ produto }: CardProdutoProps) {
 
   return (
     <Link href={`/produto/${produto.slug}`} className="group block card-produto">
-      {/* Imagem */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-nervura-creme-escuro">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#efe8dc]">
         <Image
           src={imagem}
           alt={produto.nome}
           fill
-          className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+          className="object-cover transition duration-500 group-hover:scale-[1.02] group-hover:opacity-0"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
         <Image
           src={imagemHover}
           alt={produto.nome}
           fill
-          className="object-cover absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="absolute inset-0 object-cover opacity-0 transition duration-500 group-hover:scale-[1.02] group-hover:opacity-100"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
 
-        {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {produto.destaque && (
-            <span className="bg-nervura-ouro text-nervura-verde text-xs font-bold px-2 py-0.5 rounded">
+            <span className="bg-nervura-ouro px-2 py-1 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-nervura-texto-principal">
               Destaque
             </span>
           )}
           {temDesconto && (
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded">
+            <span className="bg-[#b94132] px-2 py-1 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
               -{descPct}%
             </span>
           )}
           {Array.isArray(produto.colecoes) && produto.colecoes.includes("copa-2026") && (
-            <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">
+            <span className="bg-nervura-verde px-2 py-1 font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-white">
               Copa 2026
             </span>
           )}
         </div>
+
+        <div className="absolute inset-x-0 bottom-0 translate-y-full border-t border-white/30 bg-white/75 px-4 py-3 backdrop-blur-md transition-transform duration-300 group-hover:translate-y-0">
+          <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-nervura-verde">
+            Ver peca
+          </span>
+        </div>
       </div>
 
-      {/* Info */}
-      <div className="p-3">
-        <h3 className="font-sans text-sm font-medium text-nervura-texto-principal line-clamp-2 group-hover:text-nervura-verde transition-colors">
+      <div className="space-y-2 px-0 py-4">
+        <p className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-nervura-texto-muted">
+          Curadoria Nervura
+        </p>
+        <h3 className="line-clamp-2 font-sans text-[15px] font-medium leading-6 text-nervura-texto-principal transition-colors group-hover:text-nervura-verde">
           {produto.nome}
         </h3>
-        <div className="flex items-center gap-2 mt-1">
+        <div className="flex items-center gap-2">
           {temDesconto ? (
             <>
-              <span className="font-bold text-nervura-verde text-base">
+              <span className="font-sans text-lg font-semibold text-nervura-verde">
                 {formatCurrency(produto.precoPromo!)}
               </span>
-              <span className="text-nervura-texto-muted text-sm line-through">
+              <span className="font-sans text-sm text-nervura-texto-muted line-through">
                 {formatCurrency(produto.preco)}
               </span>
             </>
           ) : (
-            <span className="font-bold text-nervura-verde text-base">
+            <span className="font-sans text-lg font-semibold text-nervura-verde">
               {formatCurrency(produto.preco)}
             </span>
           )}

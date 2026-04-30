@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@400;600&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e5e2e1",
+                    "surface-container-high": "#ebe7e7",
+                    "on-secondary-fixed": "#241a00",
+                    "tertiary-fixed-dim": "#c8c8b0",
+                    "primary-container": "#1a472a",
+                    "on-secondary-container": "#745c00",
+                    "on-secondary-fixed-variant": "#574500",
+                    "on-primary-fixed": "#00210d",
+                    "surface-container": "#f0edec",
+                    "surface-bright": "#fcf9f8",
+                    "surface-tint": "#3b6848",
+                    "background": "#fcf9f8",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-fixed": "#e4e4cc",
+                    "on-primary-fixed-variant": "#234f32",
+                    "inverse-surface": "#313030",
+                    "tertiary-container": "#3e402e",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1c1b1b",
+                    "primary-fixed-dim": "#a1d2ab",
+                    "secondary-fixed": "#ffe088",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#85b590",
+                    "surface": "#fcf9f8",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#474836",
+                    "outline-variant": "#c1c9bf",
+                    "primary": "#003016",
+                    "outline": "#717971",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#735c00",
+                    "on-surface": "#1c1b1b",
+                    "tertiary": "#282a1a",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-container": "#abab95",
+                    "surface-variant": "#e5e2e1",
+                    "inverse-on-surface": "#f3f0ef",
+                    "secondary-fixed-dim": "#e9c349",
+                    "on-tertiary-fixed": "#1b1d0e",
+                    "inverse-primary": "#a1d2ab",
+                    "on-surface-variant": "#414942",
+                    "primary-fixed": "#bdefc6",
+                    "secondary-container": "#fed65b",
+                    "surface-dim": "#dcd9d9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "lg": "48px",
+                    "container-max": "1440px",
+                    "margin": "32px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "gutter": "24px",
+                    "md": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Manrope"],
+                    "headline-lg": ["Noto Serif"],
+                    "label-caps": ["Space Grotesk"],
+                    "headline-md": ["Noto Serif"],
+                    "body-md": ["Manrope"],
+                    "display": ["Noto Serif"],
+                    "price": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "price": ["20px", {"lineHeight": "1", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fcf9f8;
+            color: #1c1b1b;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="bg-white/90 dark:bg-stone-950/90 backdrop-blur-md docked full-width top-0 sticky z-50 border-b border-emerald-900/10 dark:border-emerald-50/10 flat no shadows">
+<div class="flex justify-between items-center px-8 py-6 max-w-[1440px] mx-auto w-full">
+<div class="text-2xl font-bold tracking-tighter text-emerald-900 dark:text-emerald-50 font-noto-serif uppercase cursor-pointer">AESTHETICA</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-noto-serif uppercase tracking-widest text-sm text-emerald-900 dark:text-emerald-50 border-b border-emerald-900 dark:border-emerald-50 pb-1 cursor-pointer transition-all active:opacity-70" href="#">Shop</a>
+<a class="font-noto-serif uppercase tracking-widest text-sm text-emerald-900/60 dark:text-emerald-50/60 hover:text-emerald-700 dark:hover:text-amber-200 transition-colors duration-300 cursor-pointer transition-all active:opacity-70" href="#">Collections</a>
+<a class="font-noto-serif uppercase tracking-widest text-sm text-emerald-900/60 dark:text-emerald-50/60 hover:text-emerald-700 dark:hover:text-amber-200 transition-colors duration-300 cursor-pointer transition-all active:opacity-70" href="#">Heritage</a>
+<a class="font-noto-serif uppercase tracking-widest text-sm text-emerald-900/60 dark:text-emerald-50/60 hover:text-emerald-700 dark:hover:text-amber-200 transition-colors duration-300 cursor-pointer transition-all active:opacity-70" href="#">Journal</a>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-500 cursor-pointer hover:text-amber-600 transition-colors" data-icon="search">search</span>
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-500 cursor-pointer hover:text-amber-600 transition-colors" data-icon="person">person</span>
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-500 cursor-pointer hover:text-amber-600 transition-colors" data-icon="shopping_bag">shopping_bag</span>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-[921px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A sophisticated editorial fashion photograph of a model in a high-end linen suit standing against a textured concrete wall. The lighting is soft and golden, suggesting a late afternoon in a Brazilian coastal city. The overall aesthetic is minimalist and luxurious, with a focus on organic textures and a palette of forest green and warm beige. The mood is serene, confident, and architecturally precise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_RECE3hqBKPoN5uN70H23pXhQRtaMhjNkSPC8mQKMXyMVCSXll-SSZTFYMvzwkI3xzCimQI0A9mWdVKETLE1lxDA7-m4MOgkisVY1a65jKPgvWB7yjzx3wbGZfYFUjPDR9mY8x_l3JFeEyE8Mgl3IORktMK1wz7PrWvvhrcngzNrrZJq7pGQcxZqzStvUrZpeLP7TgSxnm5eVXklDvXbiCN-qxkF2CW_sYQA-5OvFchmEQy-LWpWasODrlvMN1rMEcu1oH_o29tw5"/>
+<div class="absolute inset-0 bg-primary/20"></div>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin w-full">
+<div class="max-w-2xl text-white">
+<p class="font-label-caps text-label-caps mb-4 tracking-[0.3em]">NEW COLLECTION 2024</p>
+<h1 class="font-display text-display mb- base md:mb-md leading-none">Architectural <br/> Elegance.</h1>
+<p class="font-body-lg text-body-lg mb-lg opacity-90 max-w-lg">Discover the intersection of organic Brazilian soul and precise structural tailoring. Slow fashion for the discerning eye.</p>
+<div class="flex gap-gutter">
+<button class="bg-primary px-xl py-md text-white font-label-caps text-label-caps hover:bg-primary-container transition-all">DISCOVER SHOP</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Featured Collections Bento -->
+<section class="py-xl max-w-container-max mx-auto px-margin">
+<div class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-primary">Seasonal Chapters</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter h-auto md:h-[700px]">
+<!-- Large Feature -->
+<div class="md:col-span-8 group relative overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic wide shot of high-end athletic wear inspired by Brazilian soccer culture for the Copa 2026. A model is posed dynamically against a backdrop of modernist Brazilian architecture. The color palette features deep forest greens and subtle gold accents. The lighting is bright and high-contrast, creating a powerful and energetic visual narrative that feels premium and exclusive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvRVGXFXIj1iVli_VYiGDwRKKLAxy0nEnkDLjbsLQcIsNgINTFDmKWVxStTAOLISchXySEvLSJ3Sb6C60iIwvai5FGYYMJxyz7HGa1tNRtiYp9GVoDB7FHLAJDVqQt5exFrYJafYDws9SYoalNcK_YWSbRpe8o7J3-EAPBDXOaoT9HpUngKyyGzZBv7YepkX7zTo0KfL8DCYzNeY_iFdgMlrrqPcCK7KNyw0Xcyl7wxbniANSqDGwSidPANZUYoEUreX0L8-rxhaFx"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-lg">
+<p class="text-white font-label-caps text-label-caps mb-xs">LIMITTED EDITION</p>
+<h3 class="text-white font-display text-[40px] leading-tight mb-md">COPA 2026</h3>
+<button class="text-white font-label-caps text-label-caps border-b border-white self-start pb-1">VIEW COLLECTION</button>
+</div>
+</div>
+<!-- Secondary Feature -->
+<div class="md:col-span-4 grid grid-rows-2 gap-gutter">
+<div class="relative group overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A close-up fashion shot of lightweight silk and linen garments suitable for summer in Brazil. The focus is on the intricate weave and the natural texture of the fabric. The lighting is warm and diffused, creating a feeling of effortless luxury. The palette consists of neutral tones and ivory, reflecting a quiet and sophisticated summer aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUWtEupS09rDIZCh6-MfohtjhFDaCP-WaeACmGgs8OGEIyLJAHT_h1s39JC0MvGSPUSZQkwnD8k59r1rIoSNAUC8Vd8JLwpSbwnoemag-VILNjmqAa-lSNLw1OHu1tyE-igU0AXscZRxR6zptc2NAeAMUqMD8YbKcPuRE7IoBcSDt1hnErRWE3tD7g5g_8w1yUKcXnSNWMUDCVMLtcluY46QBjoTNrmvdV1PiJ0wM9jJaDJYbXjf2uqgu_FDNOA9-MHTakfETSGRAs"/>
+<div class="absolute inset-0 bg-black/20 flex flex-col justify-end p-md">
+<h3 class="text-white font-headline-md text-headline-md">Summer Essentials</h3>
+<button class="text-white font-label-caps text-label-caps border-b border-white self-start pb-xs mt-2">EXPLORE</button>
+</div>
+</div>
+<div class="relative group overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist studio setup showing a curated selection of leather accessories and handbags in a rich tobacco brown. The items are arranged on a sandstone plinth with sharp, architectural shadows. The background is a soft beige, emphasizing the brand's commitment to quality materials and timeless design. The overall mood is professional, high-end, and extremely refined." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwOPEfxJO_bTGyAEo6g3M_5gs9QahHE1QGEs-5sCkpq7FugC7xRZF7DiCAGD1vR0fvxCHl_gHDHnI-YXgDJOYS4Rgz6WTTbOhuGf8fXh_Bv0utcV75gAENElsnVfjSMSMajAK_QHJ3vHfQFmwGOdBegYj5ypGCpIMivSx6iv-76ZeidzWLlnLiO-NFThlorVBqdcQ_14vkJwj89iuEDEUcsSaOKGTcpt-8zMurD8XmoDlMsMWZ47LJ-07gHx_Lvb7mBC7Xpqp5c6S8"/>
+<div class="absolute inset-0 bg-black/20 flex flex-col justify-end p-md">
+<h3 class="text-white font-headline-md text-headline-md">The Heritage Line</h3>
+<button class="text-white font-label-caps text-label-caps border-b border-white self-start pb-xs mt-2">EXPLORE</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Best Sellers Selection -->
+<section class="py-xl bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin">
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Curated Favorites</h2>
+<p class="font-body-md text-body-md text-outline">The pieces our community returns to, season after season.</p>
+</div>
+<button class="font-label-caps text-label-caps border-b border-primary pb-1">SEE ALL PIECES</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Product Card 1 -->
+<div class="flex flex-col gap-sm group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="A full-length fashion portrait of a model wearing a structured emerald green midi dress. The dress features clean lines and a modern silhouette, reflecting the brand's architectural focus. The setting is a minimalist white studio with a single palm leaf shadow cast across the background. The mood is elevated, high-fashion, and distinctly Brazilian in its color inspiration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU39uVLXCg8JPvhvhdfJzYNuS0H_APhBP9OLFy5ts_S3sl5aLu2rw5L0_3dubLVwVBV9JaT8KIJWhf1PMjOi25OwG0hR6pkZKibP9gLWT39NQKAwzcGdU8ZyfM0mDXNQmY2INto0KzJJvgz2BS-Xfok3nCBefu_Rc2PlUvMDzkwng2dapRU053g4SY7EwG-bCwJWmuT2kokdNjjK4rf7uIDLY9xzf7VilUeRCyqG1KUxrWT3gpZSz6Moh7c_LTDJRcT3wcNDfObFCA"/>
+<div class="absolute bottom-0 left-0 right-0 p-md translate-y-full group-hover:translate-y-0 transition-transform bg-white/40 backdrop-blur-sm">
+<button class="w-full bg-primary text-white font-label-caps py-sm">QUICK ADD — $420</button>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-outline mb-xs">HANDMADE IN BRAZIL</span>
+<h4 class="font-body-md text-body-md text-primary">Verdana Structured Dress</h4>
+<p class="font-price text-price text-primary mt-xs">$420.00</p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="flex flex-col gap-sm group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="A studio photograph of a premium white silk blouse with sculptural sleeves. The fabric has a subtle sheen and is draped elegantly on a minimalist hanger. The background is a neutral grey, highlighting the purity and high-quality craftsmanship of the garment. The image is bright, airy, and exemplifies the quiet luxury aesthetic of the fashion brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7BSDP8K0ETNF8WbzWdL2qSGNKTcoT1fmU5PmGAE_MoGzlmif_afpne_Eo701EEoXSI2F1dvZNRTQxh8zV6KYBZNdemN1CywpUp-V_bXdE4QjxipT8paxhLtSKcVwl7ZJvKRlE-DC3EZl8lJz0vn1vOuV_825I2Ei2RcfG01j9Ah3Vc6vYfz8uGlQ-jzauJz9oSyQ-FD6QiEge1bvNH9GADuxI_fbYN7xz_B4jl81qdQQyX1EpKsl6OjJPY91ZcbU79IWERm50TdPf"/>
+<div class="absolute bottom-0 left-0 right-0 p-md translate-y-full group-hover:translate-y-0 transition-transform bg-white/40 backdrop-blur-sm">
+<button class="w-full bg-primary text-white font-label-caps py-sm">QUICK ADD — $280</button>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-outline mb-xs">ORGANIC SILK</span>
+<h4 class="font-body-md text-body-md text-primary">Sculptural Silk Blouse</h4>
+<p class="font-price text-price text-primary mt-xs">$280.00</p>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="flex flex-col gap-sm group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-highest relative">
+<img class="w-full h-full object-cover" data-alt="A pair of wide-leg trousers in a warm sand-colored linen, showcased on a model walking through a sun-drenched courtyard. The trousers have a perfect drape and a high-waisted architectural cut. The environment includes terracotta tiles and lush green plants, creating a high-end Mediterranean-Brazilian fusion atmosphere. The lighting is natural and vibrant, emphasizing the texture of the linen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiVcEtJM5aIdWNC43xpGebbB4zw9djIhl_6-rmVERwhMSAUzwL19KJW3bDBbmAtWRkVOjyfhj1i4rRmVaZKyrw6sXHtADxDzZpOV-Kysgow0mE6N-7PGnLbbnRVngfBaxwfyEUrIoxVP2Vj0wGeKI4svsULCq96jpyrPN6JHAEb2e5-_igSSEs1hXaJfdBQSsob2Se9zeFvryFYSF0pXq5hYQstZFYiGp-j8vK9o4rLMKTW3o9qid7ILwlfgHpTCoDqT9I21T3aIZN"/>
+<div class="absolute bottom-0 left-0 right-0 p-md translate-y-full group-hover:translate-y-0 transition-transform bg-white/40 backdrop-blur-sm">
+<button class="w-full bg-primary text-white font-label-caps py-sm">QUICK ADD — $350</button>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-outline mb-xs">PREMIUM LINEN</span>
+<h4 class="font-body-md text-body-md text-primary">High-Waist Sands Trousers</h4>
+<p class="font-price text-price text-primary mt-xs">$350.00</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Story Section -->
+<section class="py-xl">
+<div class="max-w-container-max mx-auto px-margin grid grid-cols-1 md:grid-cols-2 items-center gap-xl">
+<div class="order-2 md:order-1">
+<p class="font-label-caps text-label-caps text-secondary mb-md">THE NER VURA ETHOS</p>
+<h2 class="font-display text-display mb-md text-primary">Quiet Luxury, Born in Brazil.</h2>
+<div class="space-y-md font-body-lg text-body-lg text-on-surface-variant">
+<p>Founded on the principles of slow fashion and architectural precision, Nervura Brasil represents a new chapter in South American luxury. We believe that true elegance doesn't shout; it resonates through the quality of the thread and the integrity of the cut.</p>
+<p>Every piece is crafted in our São Paulo atelier using locally sourced materials, honoring the artisans who have perfected their craft over generations. We design for the woman who values history as much as she values the future.</p>
+</div>
+<button class="mt-lg border border-primary px-xl py-md text-primary font-label-caps text-label-caps hover:bg-primary hover:text-white transition-all">LEARN OUR HERITAGE</button>
+</div>
+<div class="order-1 md:order-2 grid grid-cols-2 gap-md">
+<div class="pt-xl">
+<img class="w-full grayscale" data-alt="A black and white close-up image of a seamstress's hands meticulously working on a delicate fabric in a sunlit atelier. The focus is on the precision of the stitching and the traditional tools of the trade. The background is softly blurred, showing a professional and serene workspace. This image communicates the brand's dedication to craftsmanship, heritage, and slow fashion principles." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQPsWDQyru18-FYmPJacpJ7OP49tj2qetM0sBkcrFuBktuxwWdrS8JQwbC7wwCiBoEu8FjeL2a5m4if3e5fuw2crTbpVBycZxY5_TlL7Snjk3AtIwC4eOfng3xGuJoh0Us1odVjL8_uOv62GBwfLvj7GpNZLeV1hWwPE24QILXpncwtMLDARS6oL2wcCZz2-cZFXUiUyVUcT3hKgEjfbd6OapQdnqAt_UobeARPGfyfQX2DFuc1X6CTHjoDy1HLNaDQCzM03zsTir0"/>
+</div>
+<div>
+<img class="w-full" data-alt="A lifestyle shot of a high-end fashion atelier in Brazil, featuring racks of white and neutral-toned garments. The space is minimalist and bright, with large windows and architectural furniture. The lighting is soft and natural, emphasizing the clean and professional environment where the brand's clothing is designed and curated. The mood is sophisticated and artistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYSL3aeIlSpOvJ5ZBvZIDdInXMWCYhf9i6gfyoUh6xeiDTOZjAeMyBNLFNuz3p91hapmHcTOqBb-RSY0Gy5NIFSlW_OziFhohmw-6SUtmzjV9jWpU37Jx_WvTOYrBx3ks75oBjFPIWIVP2K7KmNBYjID-Sbj-8znaADlcKmSz_ZQ9A0LTfL2qJma8D4tRCFr8l7vfkCZbwhB-qFE51dU2nrWSgoJenzhI_1L97DqbXphdAS1s2F6rsb2eGZtdSdMpkO97FAf_Wq5CE"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-stone-100 dark:bg-stone-900 full-width py-12 px-8 border-t border-emerald-900/5 flat no shadows">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:flex lg:justify-between items-start gap-8 max-w-[1440px] mx-auto">
+<div class="flex flex-col gap-4">
+<div class="text-lg font-bold text-emerald-900 dark:text-emerald-50 font-noto-serif">AESTHETICA</div>
+<p class="font-noto-serif text-xs tracking-wider text-emerald-900/60 dark:text-emerald-50/60 max-w-xs">Elevating the Brazilian aesthetic through structural design and sustainable craftsmanship.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-8">
+<div class="flex flex-col gap-3">
+<h5 class="font-label-caps text-label-caps text-emerald-900 dark:text-emerald-500">COLLECTIONS</h5>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Copa 2026</a>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Summer Essentials</a>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Heritage Line</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="font-label-caps text-label-caps text-emerald-900 dark:text-emerald-500">SUPPORT</h5>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Shipping &amp; Returns</a>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Contact</a>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Sustainability</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="font-label-caps text-label-caps text-emerald-900 dark:text-emerald-500">LEGAL</h5>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Privacy Policy</a>
+<a class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 hover:opacity-100 hover:text-amber-600 transition-opacity" href="#">Terms of Service</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-label-caps text-label-caps text-emerald-900 dark:text-emerald-500">NEWSLETTER</h5>
+<div class="flex border-b border-emerald-900/20 py-2">
+<input class="bg-transparent border-none focus:ring-0 font-noto-serif text-xs w-full" placeholder="Email Address" type="email"/>
+<button class="material-symbols-outlined text-emerald-900 dark:text-emerald-500" data-icon="arrow_forward">arrow_forward</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-emerald-900/5">
+<p class="font-noto-serif text-xs tracking-wider text-emerald-900 dark:text-emerald-500 opacity-80 text-center">© 2024 AESTHETICA BRAZIL. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+</body></html>

@@ -12,54 +12,54 @@ export function Header() {
   const qtd = totalItens();
 
   const navLinks = [
-    { href: "/catalogo", label: "Catálogo" },
+    { href: "/catalogo", label: "Catalogo" },
     { href: "/copa-2026", label: "Copa 2026" },
-    { href: "/#nossa-historia", label: "Nossa História" },
+    { href: "/#nossa-historia", label: "Nossa Historia" },
   ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-nervura-verde shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-serif text-2xl font-bold text-nervura-creme tracking-wide">
-                Nervura Brasil
-              </span>
-            </Link>
-
-            {/* Nav desktop */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
+      <header className="sticky top-0 z-50 border-b border-black/5 bg-[#fcf9f8]/92 backdrop-blur-md">
+        <div className="editorial-shell">
+          <div className="grid h-20 grid-cols-[1fr_auto] items-center md:grid-cols-[1fr_auto_1fr]">
+            <nav className="hidden items-center gap-8 md:flex">
+              {navLinks.map((link, index) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-nervura-ouro font-sans text-sm font-medium hover:text-nervura-creme transition-colors duration-200"
+                  className={`font-sans text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 ${
+                    index === 0
+                      ? "border-b border-nervura-verde pb-1 text-nervura-verde"
+                      : "text-nervura-texto-secundario hover:text-nervura-verde"
+                  }`}
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
 
-            {/* Ações */}
-            <div className="flex items-center gap-4">
+            <Link href="/" className="justify-self-start md:justify-self-center">
+              <span className="font-serif text-[1.85rem] font-semibold tracking-[-0.03em] text-nervura-verde">
+                Nervura Brasil
+              </span>
+            </Link>
+
+            <div className="flex items-center justify-self-end gap-4">
               <button
                 onClick={() => setAberto(true)}
-                className="relative text-nervura-creme hover:text-nervura-ouro transition-colors duration-200"
+                className="relative text-nervura-verde transition-colors duration-200 hover:text-nervura-ouro"
                 aria-label="Abrir carrinho"
               >
                 <ShoppingBag size={24} />
                 {qtd > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-nervura-ouro text-nervura-verde text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-nervura-ouro text-[10px] font-bold text-nervura-texto-principal">
                     {qtd > 9 ? "9+" : qtd}
                   </span>
                 )}
               </button>
 
-              {/* Menu mobile */}
               <button
-                className="md:hidden text-nervura-creme hover:text-nervura-ouro transition-colors"
+                className="text-nervura-verde transition-colors hover:text-nervura-ouro md:hidden"
                 onClick={() => setMenuAberto(!menuAberto)}
                 aria-label="Menu"
               >
@@ -68,14 +68,13 @@ export function Header() {
             </div>
           </div>
 
-          {/* Nav mobile */}
           {menuAberto && (
-            <nav className="md:hidden pb-4 border-t border-nervura-verde-medio pt-4">
+            <nav className="border-t border-nervura-verde/10 pb-5 pt-4 md:hidden">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block py-2 text-nervura-ouro font-sans text-sm font-medium hover:text-nervura-creme transition-colors"
+                  className="block py-2 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-nervura-texto-secundario transition-colors hover:text-nervura-verde"
                   onClick={() => setMenuAberto(false)}
                 >
                   {link.label}

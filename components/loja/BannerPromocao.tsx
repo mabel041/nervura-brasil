@@ -16,18 +16,18 @@ export function BannerPromocao({ texto, linkHref, linkLabel }: BannerPromocaoPro
   if (fechado) return null;
 
   return (
-    <div className="bg-nervura-ouro text-nervura-verde py-2 px-4 relative">
-      <div className="max-w-7xl mx-auto text-center text-sm font-sans font-medium flex items-center justify-center gap-2">
+    <div className="relative border-b border-black/5 bg-[#d4b24c] px-4 py-2.5 text-nervura-texto-principal">
+      <div className="editorial-shell flex items-center justify-center gap-3 text-center font-sans text-[11px] font-medium uppercase tracking-[0.18em]">
         <span>{texto}</span>
         {linkHref && linkLabel && (
-          <Link href={linkHref} className="underline font-bold hover:no-underline">
+          <Link href={linkHref} className="border-b border-current font-semibold transition-colors hover:border-transparent">
             {linkLabel}
           </Link>
         )}
       </div>
       <button
         onClick={() => setFechado(true)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-nervura-verde hover:text-nervura-texto-principal transition-colors"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-nervura-texto-principal/70 transition-colors hover:text-nervura-texto-principal"
         aria-label="Fechar banner"
       >
         <X size={16} />
