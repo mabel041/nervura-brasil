@@ -42,18 +42,15 @@ export function ContadorCopa() {
   if (!montado) return null;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
-      {unidades.map((u, i) => (
-        <div key={u.label} className="flex items-center gap-3 sm:gap-5">
-          <div className="text-center">
-            <div className="flex h-16 w-16 items-center justify-center border border-nervura-verde/15 bg-[#fffaf1] font-sans text-2xl font-semibold tabular-nums text-nervura-verde sm:h-20 sm:w-20 sm:text-3xl">
-              {String(u.valor).padStart(2, "0")}
-            </div>
-            <span className="mt-2 block font-sans text-[10px] uppercase tracking-[0.22em] text-nervura-texto-muted">
-              {u.label}
-            </span>
+    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+      {unidades.map((u) => (
+        <div key={u.label} className="text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-[6px] border border-[#e8dcc4] bg-[#fffaf1] font-sans text-2xl font-semibold tabular-nums text-[#846b22] shadow-[0_1px_0_rgba(0,0,0,0.03)] sm:h-[4.6rem] sm:w-[4.6rem] sm:text-[1.95rem]">
+            {String(u.valor).padStart(2, "0")}
           </div>
-          {i < 3 && <span className="mb-5 text-lg font-semibold text-nervura-ouro sm:text-2xl">:</span>}
+          <span className="mt-2 block font-sans text-[9px] uppercase tracking-[0.16em] text-nervura-texto-muted">
+            {u.label}
+          </span>
         </div>
       ))}
     </div>

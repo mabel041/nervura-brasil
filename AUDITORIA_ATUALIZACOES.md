@@ -72,3 +72,33 @@ Este arquivo registra, por lote, o que foi alterado e enviado para deploy.
 ### Observacoes
 - A pagina de produto, carrinho, checkout e order bump continuam com a estrutura atual; este lote altera apenas a home e os componentes compartilhados de moldura visual.
 - O screen Stitch solicitado por ID nao expunha `htmlUrl`; por isso foi mantido tambem um screen alternativo do mesmo projeto que disponibiliza HTML para referencia de implementacao.
+
+## 2026-04-30
+
+### Lote
+- Ajuste de fidelidade da home em relacao ao Stitch
+- Correcao do banner superior e refinamento de densidade visual
+
+### Arquivos incluidos
+- `app/(store)/layout.tsx`
+- `app/(store)/page.tsx`
+- `components/loja/BarraPagamentos.tsx`
+- `components/loja/CardProduto.tsx`
+- `components/loja/ContadorCopa.tsx`
+- `components/loja/Header.tsx`
+- `components/loja/RodapeSociais.tsx`
+
+### O que foi alterado
+- Home recompactada para ficar mais proxima do mock do Stitch, com hero mais baixo, miolo centralizado e hierarquia mais comercial.
+- Secao da Copa 2026 aproximada do layout de referencia, com contagem em caixas menores e texto central.
+- Grade de destaques reduzida e adensada para reproduzir melhor a leitura visual do mock.
+- Bloco de historia reorganizado para composicao lateral mais fiel ao Stitch.
+- Header, barra de pagamentos e rodape ajustados para recuperar a proporcao e o contraste vistos no layout de referencia.
+- Texto corrompido do banner superior corrigido em producao.
+
+### Validacao executada
+- `npm run build`
+- `npx tsc --noEmit`
+
+### Observacoes
+- `.claude/settings.local.json` continua fora do deploy por ser configuracao local da maquina.

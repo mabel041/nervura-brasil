@@ -13,6 +13,7 @@ async function getConfig() {
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
   const config = await getConfig();
+
   return (
     <>
       <Suspense>
@@ -23,11 +24,13 @@ export default async function StoreLayout({ children }: { children: React.ReactN
           googleAdsId={config?.googleAdsId}
         />
       </Suspense>
+
       <BannerPromocao
-        texto="🏆 Coleção Copa 2026 chegou! Use COPA10 para 10% off"
+        texto="Colecao Copa 2026 chegou! Use COPA10 para 10% off"
         linkHref="/copa-2026"
-        linkLabel="Ver coleção →"
+        linkLabel="Ver colecao"
       />
+
       <Header />
       <main className="min-h-screen">{children}</main>
       <BarraPagamentos />

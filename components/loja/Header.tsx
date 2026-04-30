@@ -19,10 +19,10 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-black/5 bg-[#fcf9f8]/92 backdrop-blur-md">
-        <div className="editorial-shell">
-          <div className="grid h-20 grid-cols-[1fr_auto] items-center md:grid-cols-[1fr_auto_1fr]">
-            <nav className="hidden items-center gap-8 md:flex">
+      <header className="sticky top-0 z-50 border-b border-black/5 bg-[#fffdf8]">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+          <div className="grid h-14 grid-cols-[1fr_auto] items-center md:grid-cols-[1fr_auto_1fr]">
+            <nav className="hidden items-center gap-6 md:flex">
               {navLinks.map((link, index) => (
                 <Link
                   key={link.href}
@@ -39,18 +39,18 @@ export function Header() {
             </nav>
 
             <Link href="/" className="justify-self-start md:justify-self-center">
-              <span className="font-serif text-[1.85rem] font-semibold tracking-[-0.03em] text-nervura-verde">
+              <span className="font-serif text-[1.7rem] font-semibold tracking-[-0.03em] text-nervura-verde">
                 Nervura Brasil
               </span>
             </Link>
 
-            <div className="flex items-center justify-self-end gap-4">
+            <div className="flex items-center justify-self-end gap-3">
               <button
                 onClick={() => setAberto(true)}
                 className="relative text-nervura-verde transition-colors duration-200 hover:text-nervura-ouro"
                 aria-label="Abrir carrinho"
               >
-                <ShoppingBag size={24} />
+                <ShoppingBag size={20} />
                 {qtd > 0 && (
                   <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-nervura-ouro text-[10px] font-bold text-nervura-texto-principal">
                     {qtd > 9 ? "9+" : qtd}
