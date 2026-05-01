@@ -1,7 +1,7 @@
 export function BarraPagamentos() {
   return (
     <section className="border-t border-black/5 bg-[#f4ecd9] px-4 py-5">
-      <div className="editorial-shell flex flex-col items-start justify-between gap-5 lg:flex-row lg:items-center">
+      <div className="mx-auto flex max-w-[1180px] flex-col items-start justify-between gap-5 sm:px-6 lg:flex-row lg:items-center lg:px-8">
         <div className="flex flex-col gap-2">
           <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-nervura-texto-secundario">
             Pagamento seguro

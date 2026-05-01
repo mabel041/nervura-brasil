@@ -65,14 +65,13 @@ export function RodapeSociais({
   const tel = whatsappNumero ?? process.env.NEXT_PUBLIC_WHATSAPP_NUMERO ?? "5541999999999";
 
   return (
-    <footer className="bg-[#18211c] text-[#f5ecd8]">
-      <div className="editorial-grid py-16">
-        <div className="grid grid-cols-1 gap-12 border-t border-white/10 pt-10 md:grid-cols-2 lg:grid-cols-[1.55fr_0.9fr_0.9fr_1fr]">
+    <footer className="bg-nervura-verde text-[#f5ecd8]">
+      <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.45fr_1fr_1fr_1fr]">
           <div>
-            <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#d7b25f]">Nervura Brasil</p>
-            <h3 className="mt-3 max-w-sm font-serif text-[2.6rem] font-semibold leading-[0.92] tracking-[-0.04em] text-[#f5efe2]">Moda feminina brasileira com acabamento autoral.</h3>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-[#cbc2b0]">
-              Colecoes com modelagem limpa, materias escolhidas e uma apresentacao mais clara entre produto, campanha e catalogo.
+            <h3 className="mb-4 font-serif text-3xl font-semibold tracking-[-0.03em]">Nervura Brasil</h3>
+            <p className="max-w-sm text-sm leading-7 text-[#d8ceb9]">
+              Moda feminina brasileira com identidade. Pecas de presenca calma, corte preciso e materia viva.
             </p>
           </div>
 
@@ -88,7 +87,7 @@ export function RodapeSociais({
                 { href: "/catalogo?colecao=basics", label: "Basics" },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[#cbc2b0] transition-colors hover:text-white">
+                  <Link href={link.href} className="text-[#d8ceb9] transition-colors hover:text-white">
                     {link.label}
                   </Link>
                 </li>
@@ -102,17 +101,17 @@ export function RodapeSociais({
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               {instagramUrl && (
-                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                   <IconeInstagram /> Instagram
                 </a>
               )}
               {tiktokUrl && (
-                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                   <IconeTikTok /> TikTok
                 </a>
               )}
               {facebookUrl && (
-                <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+                <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                     <rect width="24" height="24" rx="5" fill="#1877F2" />
                     <path d="M16 8h-2a1 1 0 0 0-1 1v2h3l-.5 3H13v7h-3v-7H8v-3h2V9a4 4 0 0 1 4-4h2v3z" fill="white" />
@@ -120,7 +119,7 @@ export function RodapeSociais({
                   Facebook
                 </a>
               )}
-              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                 <IconeWhatsApp /> WhatsApp
               </a>
             </div>
@@ -131,10 +130,10 @@ export function RodapeSociais({
               Contato
             </h4>
             <div className="flex flex-col gap-3 text-sm">
-              <a href="mailto:contato@nervurabrasil.com" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+              <a href="mailto:contato@nervurabrasil.com" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                 <Mail size={18} /> contato@nervurabrasil.com
               </a>
-              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#cbc2b0] transition-colors hover:text-white">
+              <a href={`https://wa.me/${tel}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#d8ceb9] transition-colors hover:text-white">
                 <IconeWhatsApp /> Falar no WhatsApp
               </a>
               <p className="mt-1 text-xs leading-relaxed text-[#bfb49d]">
@@ -146,7 +145,7 @@ export function RodapeSociais({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-[#bfb49d] sm:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-[#bfb49d] sm:flex-row">
           <span>&copy; {new Date().getFullYear()} Nervura Brasil. Todos os direitos reservados.</span>
           <a href="mailto:contato@nervurabrasil.com" className="transition-colors hover:text-white">
             contato@nervurabrasil.com
