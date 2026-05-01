@@ -32,6 +32,7 @@ export default async function HomePage() {
   ]);
 
   const produtosHome = produtos.slice(0, 4);
+  const colecaoPrincipal = colecoes[0] ?? null;
   const heroImage =
     aparencia?.homeHeroImagem ??
     produtos[0]?.imagens?.[0] ??
@@ -42,7 +43,11 @@ export default async function HomePage() {
     produtos[1]?.imagens?.[0] ??
     heroImage;
 
-  const imagemColecao = produtosHome[0]?.imagens?.[1] ?? produtosHome[0]?.imagens?.[0] ?? heroImage;
+  const imagemColecao =
+    colecaoPrincipal?.imagem ??
+    produtosHome[0]?.imagens?.[1] ??
+    produtosHome[0]?.imagens?.[0] ??
+    heroImage;
   const imagemHistoriaSecundaria = produtosHome[1]?.imagens?.[0] ?? heroImage;
 
   return (
@@ -171,12 +176,15 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1.05fr_0.95fr]">
               <div>
                 <p className="section-kicker mb-3">Colecao especial</p>
-                <h3 className="font-serif text-[2rem] tracking-[-0.03em] text-nervura-verde">Copa 2026</h3>
+                <h3 className="font-serif text-[2rem] tracking-[-0.03em] text-nervura-verde">
+                  {colecaoPrincipal?.nome ?? "Copa 2026"}
+                </h3>
                 <p className="mt-3 max-w-md text-sm leading-7 text-nervura-texto-secundario">
-                  Um bloco de campanha mais compacto, mais proximo do Stitch e mais coerente com o tamanho atual da loja.
+                  {colecaoPrincipal?.subtitulo ||
+                    "Um bloco de campanha mais compacto, mais proximo do Stitch e mais coerente com o tamanho atual da loja."}
                 </p>
                 <div className="mt-5">
-                  <Link href="/copa-2026" className="btn-outline">
+                  <Link href={colecaoPrincipal?.href ?? "/copa-2026"} className="btn-outline">
                     Ver colecao
                   </Link>
                 </div>
@@ -185,7 +193,7 @@ export default async function HomePage() {
               <div className="relative aspect-[16/9] overflow-hidden bg-[#d8ccb5]">
                 <Image
                   src={imagemColecao}
-                  alt="Colecao Copa 2026"
+                  alt={colecaoPrincipal?.nome ?? "Colecao Copa 2026"}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 36vw"
