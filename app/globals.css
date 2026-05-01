@@ -5,14 +5,23 @@
 @layer base {
   :root {
     --radius: 0rem;
+    --page-cream: #fcf9f8;
+    --page-ink: #1c1b1b;
+    --page-olive: #1a472a;
+    --page-sand: #d4af37;
   }
 
   * {
     @apply border-nervura-borda;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-[#fcf9f8] text-nervura-texto-principal font-sans antialiased;
+    background: #fcf9f8;
+    @apply font-sans antialiased text-nervura-texto-principal;
   }
 
   h1,
@@ -27,11 +36,11 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center border border-nervura-ouro bg-nervura-ouro px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-nervura-texto-principal transition-colors duration-200 hover:bg-transparent hover:text-nervura-verde active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center border border-[#1a472a] bg-[#1a472a] px-6 py-3 font-['var(--font-space-grotesk)'] text-[11px] font-medium uppercase tracking-[0.24em] text-[#fcf9f8] transition-colors duration-200 hover:bg-[#235a34] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center border border-nervura-verde/30 px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.24em] text-nervura-verde transition-colors duration-200 hover:border-nervura-verde hover:bg-nervura-verde hover:text-nervura-creme;
+    @apply inline-flex items-center justify-center border border-[#1a472a]/20 px-6 py-3 font-['var(--font-space-grotesk)'] text-[11px] font-medium uppercase tracking-[0.24em] text-[#1a472a] transition-colors duration-200 hover:border-[#1a472a] hover:bg-[#1a472a] hover:text-[#fcf9f8];
   }
 
   .card-produto {
@@ -51,11 +60,41 @@
   }
 
   .editorial-shell {
-    @apply mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-10;
   }
 
   .section-kicker {
-    @apply font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-nervura-texto-muted;
+    @apply font-['var(--font-space-grotesk)'] text-[11px] font-medium uppercase tracking-[0.28em] text-[#72766d];
+  }
+
+  .editorial-grid {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8 xl:px-10;
+  }
+
+  .editorial-panel {
+    @apply border border-[#1a472a]/10 bg-[#f6f3f2];
+  }
+
+  .grain-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.035)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='%23000000' fill-opacity='.06'%3E%3Ccircle cx='12' cy='14' r='1'/%3E%3Ccircle cx='63' cy='49' r='1'/%3E%3Ccircle cx='109' cy='23' r='1'/%3E%3Ccircle cx='158' cy='83' r='1'/%3E%3Ccircle cx='42' cy='120' r='1'/%3E%3Ccircle cx='138' cy='145' r='1'/%3E%3Ccircle cx='81' cy='92' r='1'/%3E%3Ccircle cx='23' cy='169' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .story-divider {
+    @apply h-px w-16 bg-[#c4b59a];
+  }
+
+  .meta-chip {
+    @apply inline-flex items-center border-b border-[#1a472a]/18 px-0 py-1 font-['var(--font-space-grotesk)'] text-[10px] uppercase tracking-[0.18em] text-[#4d5b51];
+  }
+
+  .editorial-bleed {
+    @apply w-full;
+  }
+
+  .editorial-copy {
+    @apply text-[15px] leading-7 text-[#4a534d] sm:text-base;
   }
 
   .rise-in {

@@ -19,18 +19,18 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-black/5 bg-[#fffdf8]">
-        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          <div className="grid h-14 grid-cols-[1fr_auto] items-center md:grid-cols-[1fr_auto_1fr]">
-            <nav className="hidden items-center gap-6 md:flex">
+      <header className="sticky top-0 z-50 border-b border-[#1a472a]/10 bg-[#fcf9f8]/90 text-[#18211c] backdrop-blur-xl">
+        <div className="editorial-grid">
+          <div className="grid min-h-[4.8rem] grid-cols-[1fr_auto] items-center md:grid-cols-[1fr_auto_1fr]">
+            <nav className="hidden items-center gap-8 md:flex">
               {navLinks.map((link, index) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`font-sans text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors duration-200 ${
+                  className={`font-['var(--font-space-grotesk)'] text-[11px] font-medium uppercase tracking-[0.22em] transition-colors duration-200 ${
                     index === 0
-                      ? "border-b border-nervura-verde pb-1 text-nervura-verde"
-                      : "text-nervura-texto-secundario hover:text-nervura-verde"
+                      ? "border-b border-[#1a472a] pb-1 text-[#1a472a]"
+                      : "text-[#5f665f] hover:text-[#1a472a]"
                   }`}
                 >
                   {link.label}
@@ -39,27 +39,28 @@ export function Header() {
             </nav>
 
             <Link href="/" className="justify-self-start md:justify-self-center">
-              <span className="font-serif text-[1.7rem] font-semibold tracking-[-0.03em] text-nervura-verde">
-                Nervura Brasil
-              </span>
+              <div className="flex flex-col">
+                <span className="font-['var(--font-space-grotesk)'] text-[9px] uppercase tracking-[0.34em] text-[#9f8a52]">Nervura</span>
+                <span className="font-serif text-[2rem] font-medium tracking-[-0.04em] text-[#1a472a]">Brasil</span>
+              </div>
             </Link>
 
             <div className="flex items-center justify-self-end gap-3">
               <button
                 onClick={() => setAberto(true)}
-                className="relative text-nervura-verde transition-colors duration-200 hover:text-nervura-ouro"
+                className="relative text-[#1a472a] transition-colors duration-200 hover:text-[#9f8a52]"
                 aria-label="Abrir carrinho"
               >
                 <ShoppingBag size={20} />
                 {qtd > 0 && (
-                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-nervura-ouro text-[10px] font-bold text-nervura-texto-principal">
+                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#1a472a] text-[10px] font-bold text-[#fcf9f8]">
                     {qtd > 9 ? "9+" : qtd}
                   </span>
                 )}
               </button>
 
               <button
-                className="text-nervura-verde transition-colors hover:text-nervura-ouro md:hidden"
+                className="text-[#1a472a] transition-colors hover:text-[#9f8a52] md:hidden"
                 onClick={() => setMenuAberto(!menuAberto)}
                 aria-label="Menu"
               >
@@ -69,12 +70,12 @@ export function Header() {
           </div>
 
           {menuAberto && (
-            <nav className="border-t border-nervura-verde/10 pb-5 pt-4 md:hidden">
+            <nav className="border-t border-[#1a472a]/10 pb-5 pt-4 md:hidden">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="block py-2 font-sans text-[11px] font-semibold uppercase tracking-[0.22em] text-nervura-texto-secundario transition-colors hover:text-nervura-verde"
+                  className="block py-2 font-['var(--font-space-grotesk)'] text-[11px] font-medium uppercase tracking-[0.22em] text-[#5f665f] transition-colors hover:text-[#1a472a]"
                   onClick={() => setMenuAberto(false)}
                 >
                   {link.label}
