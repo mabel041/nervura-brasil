@@ -82,7 +82,6 @@ export function RodapeSociais({
             <ul className="space-y-2 text-sm">
               {[
                 { href: "/catalogo", label: "Catalogo" },
-                { href: "/copa-2026", label: "Copa 2026" },
                 { href: "/catalogo?colecao=canelado", label: "Canelado" },
                 { href: "/catalogo?colecao=basics", label: "Basics" },
               ].map((link) => (

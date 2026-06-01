@@ -13,8 +13,6 @@ export function Header() {
 
   const navLinks = [
     { href: "/catalogo", label: "Catalogo" },
-    { href: "/copa-2026", label: "Copa 2026" },
-    { href: "/#nossa-historia", label: "Nossa Historia" },
   ];
 
   return (
