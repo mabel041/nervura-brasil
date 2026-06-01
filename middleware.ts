@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export default function middleware(req: Request & { nextUrl: URL; cookies: { has(name: string): boolean } }) {
+export default function middleware(req: Request & { nextUrl: URL; cookies: { has(name: string): boolean }; headers: Headers }) {
   const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
   const isLoginPage = req.nextUrl.pathname === "/admin/login";
   const hasSessionCookie =
@@ -12,7 +12,9 @@ export default function middleware(req: Request & { nextUrl: URL; cookies: { has
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {
