@@ -15,11 +15,7 @@ interface Produto {
   destaque?: boolean;
 }
 
-interface CardProdutoProps {
-  produto: Produto;
-}
-
-export function CardProduto({ produto }: CardProdutoProps) {
+export function CardProduto({ produto }: { produto: Produto }) {
   const imagem = produto.imagens[0] ?? "/placeholder.jpg";
   const imagemHover = produto.imagens[1] ?? imagem;
   const temDesconto = produto.precoPromo && produto.precoPromo < produto.preco;
@@ -28,67 +24,58 @@ export function CardProduto({ produto }: CardProdutoProps) {
     : 0;
 
   return (
-    <Link href={`/produto/${produto.slug}`} className="group block card-produto">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[6px] bg-[#efe8dc]">
+    <Link href={`/produto/${produto.slug}`} className="group block">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-[#efe8dc]">
         <Image
           src={imagem}
           alt={produto.nome}
           fill
-          className="object-cover transition duration-500 group-hover:scale-[1.02] group-hover:opacity-0"
+          className="object-cover transition duration-500 group-hover:opacity-0"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
         <Image
           src={imagemHover}
           alt={produto.nome}
           fill
-          className="absolute inset-0 object-cover opacity-0 transition duration-500 group-hover:scale-[1.02] group-hover:opacity-100"
+          className="absolute inset-0 object-cover opacity-0 transition duration-500 group-hover:opacity-100"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
 
         <div className="absolute left-2 top-2 flex flex-wrap gap-1">
           {produto.destaque && (
-            <span className="bg-nervura-ouro px-1.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-nervura-texto-principal">
+            <span className="bg-nervura-ouro px-1.5 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-nervura-texto-principal">
               Destaque
             </span>
           )}
           {temDesconto && (
-            <span className="bg-[#b94132] px-1.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-white">
+            <span className="bg-[#b94132] px-1.5 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-white">
               -{descPct}%
             </span>
           )}
           {Array.isArray(produto.colecoes) && produto.colecoes.includes("copa-2026") && (
-            <span className="bg-nervura-verde px-1.5 py-1 font-sans text-[9px] font-semibold uppercase tracking-[0.12em] text-white">
+            <span className="bg-nervura-verde px-1.5 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-white">
               Copa 2026
             </span>
           )}
         </div>
-
-        <div className="absolute inset-x-0 bottom-0 translate-y-full border-t border-white/30 bg-white/78 px-3 py-2.5 backdrop-blur-md transition-transform duration-300 group-hover:translate-y-0">
-          <span className="font-sans text-[9px] font-semibold uppercase tracking-[0.18em] text-nervura-verde">
-            Ver peca
-          </span>
-        </div>
       </div>
 
-      <div className="space-y-1.5 px-0 py-3">
-        <p className="font-sans text-[8px] font-medium uppercase tracking-[0.16em] text-nervura-texto-muted">
-          Curadoria Nervura
-        </p>
-        <h3 className="line-clamp-2 font-sans text-[13px] font-medium leading-5 text-nervura-texto-principal transition-colors group-hover:text-nervura-verde">
+      <div className="pt-2.5 pb-1">
+        <h3 className="text-sm font-medium leading-snug text-nervura-texto-principal line-clamp-2 group-hover:text-nervura-verde transition-colors">
           {produto.nome}
         </h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mt-1">
           {temDesconto ? (
             <>
-              <span className="font-sans text-[15px] font-semibold text-nervura-verde">
+              <span className="text-sm font-semibold text-nervura-verde">
                 {formatCurrency(produto.precoPromo!)}
               </span>
-              <span className="font-sans text-xs text-nervura-texto-muted line-through">
+              <span className="text-xs text-nervura-texto-muted line-through">
                 {formatCurrency(produto.preco)}
               </span>
             </>
           ) : (
-            <span className="font-sans text-[15px] font-semibold text-nervura-verde">
+            <span className="text-sm font-semibold text-nervura-verde">
               {formatCurrency(produto.preco)}
             </span>
           )}

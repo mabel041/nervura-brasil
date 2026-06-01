@@ -54,38 +54,34 @@ export function CarrinhoDrawer() {
 
   return (
     <>
-      {/* Overlay */}
       <div
         className="fixed inset-0 bg-black/50 z-50 transition-opacity"
         onClick={() => setAberto(false)}
       />
 
-      {/* Drawer */}
-      <aside className="fixed right-0 top-0 h-full w-full max-w-md bg-nervura-branco-quente z-50 flex flex-col shadow-2xl">
+      <aside className="fixed right-0 top-0 h-full w-full sm:max-w-md bg-nervura-branco-quente z-50 flex flex-col shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-nervura-borda bg-nervura-verde">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-nervura-borda bg-nervura-verde">
           <h2 className="font-serif text-xl text-nervura-creme flex items-center gap-2">
             <ShoppingBag size={20} />
             Seu Carrinho
           </h2>
           <button
             onClick={() => setAberto(false)}
-            className="text-nervura-creme hover:text-nervura-ouro transition-colors"
+            className="text-nervura-creme hover:text-nervura-ouro transition-colors p-2 -mr-2"
+            aria-label="Fechar carrinho"
           >
             <X size={22} />
           </button>
         </div>
 
         {/* Itens */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {itens.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-nervura-texto-muted gap-4 py-16">
               <ShoppingBag size={48} strokeWidth={1} />
               <p className="font-serif text-xl">Carrinho vazio</p>
-              <button
-                onClick={() => setAberto(false)}
-                className="btn-primary text-sm"
-              >
+              <button onClick={() => setAberto(false)} className="btn-primary text-sm">
                 Ver Catálogo
               </button>
             </div>
@@ -96,51 +92,53 @@ export function CarrinhoDrawer() {
                 className="flex gap-3 bg-white rounded-lg p-3 border border-nervura-borda"
               >
                 <div className="relative w-20 h-24 rounded-md overflow-hidden flex-shrink-0">
-                  <Image
-                    src={item.imagem}
-                    alt={item.nome}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={item.imagem} alt={item.nome} fill className="object-cover" />
                 </div>
+
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-nervura-texto-principal text-sm truncate">
+                  <p className="font-medium text-nervura-texto-principal text-sm leading-tight line-clamp-2">
                     {item.nome}
                   </p>
                   <p className="text-xs text-nervura-texto-muted mt-0.5">
                     {item.cor} · {item.tamanho}
                   </p>
                   <p className="text-nervura-verde font-semibold text-sm mt-1">
-                    {formatCurrency(item.preco)}
+                    {formatCurrency(item.preco * item.quantidade)}
                   </p>
 
                   <div className="flex items-center justify-between mt-2">
+                    {/* Controle de quantidade — touch targets 44px */}
                     <div className="flex items-center border border-nervura-borda rounded-md">
                       <button
                         onClick={() =>
                           atualizarQuantidade(item.produtoId, item.cor, item.tamanho, item.quantidade - 1)
                         }
-                        className="px-2 py-1 hover:bg-nervura-creme transition-colors"
+                        className="w-10 h-10 flex items-center justify-center hover:bg-nervura-creme transition-colors active:bg-nervura-creme-escuro"
+                        aria-label="Diminuir quantidade"
                       >
                         <Minus size={14} />
                       </button>
-                      <span className="px-3 py-1 text-sm font-medium border-x border-nervura-borda">
+                      <span className="w-8 text-center text-sm font-medium border-x border-nervura-borda">
                         {item.quantidade}
                       </span>
                       <button
                         onClick={() =>
                           atualizarQuantidade(item.produtoId, item.cor, item.tamanho, item.quantidade + 1)
                         }
-                        className="px-2 py-1 hover:bg-nervura-creme transition-colors"
+                        className="w-10 h-10 flex items-center justify-center hover:bg-nervura-creme transition-colors active:bg-nervura-creme-escuro"
+                        aria-label="Aumentar quantidade"
                       >
                         <Plus size={14} />
                       </button>
                     </div>
+
+                    {/* Botão remover — touch target 44px */}
                     <button
                       onClick={() => removerItem(item.produtoId, item.cor, item.tamanho)}
-                      className="text-red-400 hover:text-red-600 transition-colors"
+                      className="w-10 h-10 flex items-center justify-center text-red-400 hover:text-red-600 active:text-red-700 transition-colors"
+                      aria-label="Remover item"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
@@ -154,13 +152,17 @@ export function CarrinhoDrawer() {
           <div className="border-t border-nervura-borda p-4 space-y-3 bg-white">
             {/* Cupom */}
             {cupom ? (
-              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2">
+              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2.5">
                 <div className="flex items-center gap-2 text-green-700 text-sm">
                   <Tag size={14} />
                   <span className="font-medium">{cupom.codigo}</span>
                   <span>— {cupom.tipo === "percentual" ? `${cupom.valor}%` : formatCurrency(cupom.valor)} off</span>
                 </div>
-                <button onClick={removerCupom} className="text-green-600 hover:text-red-500">
+                <button
+                  onClick={removerCupom}
+                  className="p-1.5 text-green-600 hover:text-red-500"
+                  aria-label="Remover cupom"
+                >
                   <X size={14} />
                 </button>
               </div>
@@ -173,12 +175,12 @@ export function CarrinhoDrawer() {
                     value={codigoCupom}
                     onChange={(e) => setCodigoCupom(e.target.value.toUpperCase())}
                     onKeyDown={(e) => e.key === "Enter" && aplicar()}
-                    className="input-field text-sm py-2 uppercase"
+                    className="input-field text-sm uppercase"
                   />
                   <button
                     onClick={aplicar}
                     disabled={cupomLoading}
-                    className="btn-primary text-sm px-4 py-2 whitespace-nowrap"
+                    className="btn-primary text-sm px-4 whitespace-nowrap"
                   >
                     {cupomLoading ? "..." : "Aplicar"}
                   </button>
@@ -196,7 +198,7 @@ export function CarrinhoDrawer() {
               {desconto() > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Desconto</span>
-                  <span>- {formatCurrency(desconto())}</span>
+                  <span>— {formatCurrency(desconto())}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold text-nervura-texto-principal text-base pt-1 border-t border-nervura-borda">
@@ -208,7 +210,7 @@ export function CarrinhoDrawer() {
             <Link
               href="/checkout"
               onClick={() => setAberto(false)}
-              className="btn-primary w-full text-center block text-sm"
+              className="btn-primary w-full text-center block py-4 text-base"
             >
               Finalizar Compra
             </Link>
